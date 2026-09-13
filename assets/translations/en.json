@@ -14,9 +14,16 @@
   "market": {
     "pairs": {
       "title": "Pairs",
-      "price": "Price",
-      "change24h": "24h change",
       "empty": "No pairs are available right now.",
+      "filters": {
+        "try": "TRY",
+        "usdt": "USDT",
+        "all": "ALL"
+      },
+      "search": {
+        "hint": "Search pairs",
+        "clear": "Clear search"
+      },
       "realtime": {
         "idle": "Live prices are idle",
         "connecting": "Connecting to live prices",

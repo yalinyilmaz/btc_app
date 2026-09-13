@@ -2,7 +2,7 @@
 
 // ignore_for_file: constant_identifier_names
 
-abstract class LocaleKeys {
+abstract class  LocaleKeys {
   static const app_title = 'app.title';
   static const app = 'app';
   static const common_language = 'common.language';
@@ -13,16 +13,18 @@ abstract class LocaleKeys {
   static const common_retry = 'common.retry';
   static const common = 'common';
   static const market_pairs_title = 'market.pairs.title';
-  static const market_pairs_price = 'market.pairs.price';
-  static const market_pairs_change24h = 'market.pairs.change24h';
   static const market_pairs_empty = 'market.pairs.empty';
+  static const market_pairs_filters_try = 'market.pairs.filters.try';
+  static const market_pairs_filters_usdt = 'market.pairs.filters.usdt';
+  static const market_pairs_filters_all = 'market.pairs.filters.all';
+  static const market_pairs_filters = 'market.pairs.filters';
+  static const market_pairs_search_hint = 'market.pairs.search.hint';
+  static const market_pairs_search_clear = 'market.pairs.search.clear';
+  static const market_pairs_search = 'market.pairs.search';
   static const market_pairs_realtime_idle = 'market.pairs.realtime.idle';
-  static const market_pairs_realtime_connecting =
-      'market.pairs.realtime.connecting';
-  static const market_pairs_realtime_connected =
-      'market.pairs.realtime.connected';
-  static const market_pairs_realtime_disconnected =
-      'market.pairs.realtime.disconnected';
+  static const market_pairs_realtime_connecting = 'market.pairs.realtime.connecting';
+  static const market_pairs_realtime_connected = 'market.pairs.realtime.connected';
+  static const market_pairs_realtime_disconnected = 'market.pairs.realtime.disconnected';
   static const market_pairs_realtime = 'market.pairs.realtime';
   static const market_pairs = 'market.pairs';
   static const market_errors_connection = 'market.errors.connection';
@@ -43,4 +45,5 @@ abstract class LocaleKeys {
   static const market_chart_interactionHint = 'market.chart.interactionHint';
   static const market_chart = 'market.chart';
   static const market = 'market';
+
 }

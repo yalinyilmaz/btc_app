@@ -29,7 +29,7 @@ class FavoritePairButton extends StatelessWidget {
           icon: Icon(
             isFavorite ? Icons.star_rounded : Icons.star_border_rounded,
             color: isFavorite
-                ? context.colors.positive
+                ? context.colors.favorite
                 : context.colors.textSecondary,
           ),
         );

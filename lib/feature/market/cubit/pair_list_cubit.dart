@@ -18,6 +18,18 @@ class PairListCubit extends Cubit<PairListState> {
 
   PairListCubit({required this.repository}) : super(const PairListState());
 
+  void searchPairs(String query) {
+    if (query == state.searchQuery) {
+      return;
+    }
+
+    emit(state.copyWith(searchQuery: query));
+  }
+
+  void clearSearch() {
+    searchPairs('');
+  }
+
   Future<void> load({bool refresh = false}) async {
     if (state.status == PairListStatus.loading) {
       return;
@@ -51,6 +63,14 @@ class PairListCubit extends Cubit<PairListState> {
         ),
       );
     }
+  }
+
+  void selectFilter(PairFilterType filter) {
+    if (filter == state.filter) {
+      return;
+    }
+
+    emit(state.copyWith(filter: filter));
   }
 
   Future<void> _startTickerUpdates() async {

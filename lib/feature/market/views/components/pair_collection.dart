@@ -8,24 +8,16 @@ class PairCollection extends StatelessWidget {
   final List<TickerModel> pairs;
   final ValueChanged<String> onPairTap;
 
-  const PairCollection({
-    super.key,
-    required this.pairs,
-    required this.onPairTap,
-  });
+  const PairCollection({super.key, required this.pairs, required this.onPairTap});
 
   @override
   Widget build(BuildContext context) {
-    return AppResponsiveBuilder(
-      mobile: _buildList,
-      tablet: _buildGrid,
-      desktop: _buildGrid,
-    );
+    return AppResponsiveBuilder(mobile: _buildList, tablet: _buildGrid, desktop: _buildGrid);
   }
 
   Widget _buildList(BuildContext context) {
     return ListView.separated(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.only(bottom: 16),
       itemCount: pairs.length,
       separatorBuilder: (_, _) => const SizedBox(height: 8),
       itemBuilder: (_, index) => _buildTile(pairs[index]),
