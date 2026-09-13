@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 @immutable
-class AppColors extends ThemeExtension<AppColors> {
+class AppColors {
   final Color background;
   final Color positive;
   final Color negative;
@@ -27,7 +27,6 @@ class AppColors extends ThemeExtension<AppColors> {
     surface: Color(0xFF1B232E),
   );
 
-  @override
   AppColors copyWith({
     Color? background,
     Color? positive,
@@ -43,22 +42,6 @@ class AppColors extends ThemeExtension<AppColors> {
       textPrimary: textPrimary ?? this.textPrimary,
       textSecondary: textSecondary ?? this.textSecondary,
       surface: surface ?? this.surface,
-    );
-  }
-
-  @override
-  AppColors lerp(covariant AppColors? other, double t) {
-    if (other == null) {
-      return this;
-    }
-
-    return AppColors(
-      background: Color.lerp(background, other.background, t)!,
-      positive: Color.lerp(positive, other.positive, t)!,
-      negative: Color.lerp(negative, other.negative, t)!,
-      textPrimary: Color.lerp(textPrimary, other.textPrimary, t)!,
-      textSecondary: Color.lerp(textSecondary, other.textSecondary, t)!,
-      surface: Color.lerp(surface, other.surface, t)!,
     );
   }
 }

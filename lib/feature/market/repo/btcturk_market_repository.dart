@@ -6,13 +6,12 @@ import 'package:btc_app/core/constants/api_constants.dart';
 import 'package:btc_app/feature/market/models/kline_candle.dart';
 import 'package:btc_app/feature/market/models/ticker_model.dart';
 import 'package:btc_app/feature/market/models/ticker_socket_update.dart';
-import 'package:btc_app/feature/market/repo/market_repository.dart';
 import 'package:btc_app/feature/market/repo/market_repository_exception.dart';
 import 'package:btc_app/feature/market/services/market_api_service.dart';
 import 'package:btc_app/feature/market/services/chart_api_service.dart';
 import 'package:btc_app/feature/market/services/market_socket_service.dart';
 
-class BtcTurkMarketRepository implements MarketRepository {
+class BtcTurkMarketRepository {
   final MarketApiService apiService;
   final ChartApiService chartApiService;
   final MarketSocketService socketService;
@@ -25,7 +24,6 @@ class BtcTurkMarketRepository implements MarketRepository {
     required this.socketService,
   });
 
-  @override
   Future<List<TickerModel>> getTickers({bool refresh = false}) async {
     final cachedTickers = _tickerCache;
     if (!refresh && cachedTickers != null) {
@@ -59,7 +57,6 @@ class BtcTurkMarketRepository implements MarketRepository {
     }
   }
 
-  @override
   Future<List<KlineCandle>> getKlines({
     required String pairSymbol,
     required int resolution,
@@ -123,12 +120,10 @@ class BtcTurkMarketRepository implements MarketRepository {
     };
   }
 
-  @override
   Stream<List<TickerSocketUpdate>> watchTickerUpdates() {
     return socketService.watchTickers();
   }
 
-  @override
   Future<void> closeTickerUpdates() {
     return socketService.close();
   }

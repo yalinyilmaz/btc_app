@@ -6,11 +6,11 @@ import 'package:btc_app/core/constants/api_constants.dart';
 import 'package:btc_app/feature/market/cubit/pair_list_state.dart';
 import 'package:btc_app/feature/market/models/ticker_model.dart';
 import 'package:btc_app/feature/market/models/ticker_socket_update.dart';
-import 'package:btc_app/feature/market/repo/market_repository.dart';
+import 'package:btc_app/feature/market/repo/btcturk_market_repository.dart';
 import 'package:btc_app/feature/market/repo/market_repository_exception.dart';
 
 class PairListCubit extends Cubit<PairListState> {
-  final MarketRepository repository;
+  final BtcTurkMarketRepository repository;
 
   StreamSubscription<List<TickerSocketUpdate>>? _tickerSubscription;
   Timer? _reconnectTimer;

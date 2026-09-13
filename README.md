@@ -33,12 +33,12 @@ lib/
     └── market/
         ├── cubit/        # Pair list, chart, and favorite state
         ├── models/       # API DTOs and domain models
-        ├── repo/         # Repository contract and implementation
+        ├── repo/         # BtcTurk repository and typed failures
         ├── services/     # Retrofit and WebSocket data sources
         └── views/        # Pages and focused UI components
 ```
 
-Dependencies are created at the application boundary and injected through `RepositoryProvider` and route-level `BlocProvider` instances. Views depend on repository abstractions through their Cubits, not on Dio, Retrofit, or socket implementations.
+Dependencies are created at the application boundary and injected through `RepositoryProvider` and route-level `BlocProvider` instances. Cubits receive the app-scoped `BtcTurkMarketRepository` through their constructors, while views remain unaware of Dio, Retrofit, and socket setup details. A future market source can be registered under its own concrete repository type and injected explicitly into the Cubit that needs it.
 
 ## Technical decisions
 

@@ -6,13 +6,14 @@ import 'package:btc_app/core/constants/api_constants.dart';
 import 'package:btc_app/feature/market/cubit/pair_chart_cubit.dart';
 import 'package:btc_app/feature/market/cubit/pair_chart_state.dart';
 import 'package:btc_app/feature/market/models/kline_candle.dart';
-import 'package:btc_app/feature/market/repo/market_repository.dart';
+import 'package:btc_app/feature/market/repo/btcturk_market_repository.dart';
 import 'package:btc_app/feature/market/repo/market_repository_exception.dart';
 
-class _MockMarketRepository extends Mock implements MarketRepository {}
+class _MockBtcTurkMarketRepository extends Mock
+    implements BtcTurkMarketRepository {}
 
 void main() {
-  late MarketRepository repository;
+  late BtcTurkMarketRepository repository;
 
   const candle = KlineCandle(
     timestamp: 2_000_000_000,
@@ -30,7 +31,7 @@ void main() {
   final from = to - ApiConstants.defaultKlineRange.inSeconds;
 
   setUp(() {
-    repository = _MockMarketRepository();
+    repository = _MockBtcTurkMarketRepository();
   });
 
   blocTest<PairChartCubit, PairChartState>(

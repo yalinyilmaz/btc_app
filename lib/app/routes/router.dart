@@ -5,16 +5,15 @@ import 'package:go_router/go_router.dart';
 
 import 'package:btc_app/app/components/app_page_body.dart';
 import 'package:btc_app/app/localization/locale_keys.g.dart';
-import 'package:btc_app/feature/market/cubit/pair_list_cubit.dart';
 import 'package:btc_app/feature/market/cubit/pair_chart_cubit.dart';
-import 'package:btc_app/feature/market/repo/market_repository.dart';
+import 'package:btc_app/feature/market/cubit/pair_list_cubit.dart';
+import 'package:btc_app/feature/market/repo/btcturk_market_repository.dart';
 import 'package:btc_app/feature/market/views/pair_chart_page.dart';
 import 'package:btc_app/feature/market/views/pair_list_page.dart';
 
-abstract final class AppRoutes {
+abstract final class AppRouteNames {
   static const pairList = '/';
   static const pairChart = '/chart/:pairSymbol';
-  static const pairChartName = 'pair-chart';
 
   static String pairChartLocation(String pairSymbol) {
     return '/chart/${Uri.encodeComponent(pairSymbol)}';
@@ -22,27 +21,26 @@ abstract final class AppRoutes {
 }
 
 final appRouter = GoRouter(
-  initialLocation: AppRoutes.pairList,
+  initialLocation: AppRouteNames.pairList,
   routes: [
     GoRoute(
-      path: AppRoutes.pairList,
+      path: AppRouteNames.pairList,
       builder: (context, state) {
         return BlocProvider(
           create: (_) =>
-              PairListCubit(repository: context.read<MarketRepository>())
+              PairListCubit(repository: context.read<BtcTurkMarketRepository>())
                 ..load(),
           child: const PairListPage(),
         );
       },
     ),
     GoRoute(
-      path: AppRoutes.pairChart,
-      name: AppRoutes.pairChartName,
+      path: AppRouteNames.pairChart,
       builder: (context, state) {
         final pairSymbol = state.pathParameters['pairSymbol']!;
         return BlocProvider(
           create: (_) => PairChartCubit(
-            repository: context.read<MarketRepository>(),
+            repository: context.read<BtcTurkMarketRepository>(),
             pairSymbol: pairSymbol,
           )..load(),
           child: PairChartPage(pairSymbol: pairSymbol),

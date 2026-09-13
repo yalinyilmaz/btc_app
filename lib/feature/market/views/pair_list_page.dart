@@ -22,7 +22,7 @@ class PairListPage extends StatelessWidget {
       body: AppPageBody(
         child: PairListView(
           onPairTap: (pairSymbol) {
-            context.push(AppRoutes.pairChartLocation(pairSymbol));
+            context.push(AppRouteNames.pairChartLocation(pairSymbol));
           },
         ),
       ),

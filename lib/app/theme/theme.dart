@@ -17,7 +17,6 @@ abstract final class AppTheme {
       onError: AppColors.dark.textPrimary,
       outline: AppColors.dark.textSecondary,
     ),
-    extensions: const [AppColors.dark],
     scaffoldBackgroundColor: AppColors.dark.background,
     textTheme: AppTextStyle.textTheme,
     appBarTheme: AppBarTheme(
@@ -26,7 +25,7 @@ abstract final class AppTheme {
       scrolledUnderElevation: 0,
       backgroundColor: AppColors.dark.background,
       foregroundColor: AppColors.dark.textPrimary,
-      systemOverlayStyle: SystemUiOverlayStyle.light,
+      systemOverlayStyle: SystemUiOverlayStyle.dark,
     ),
     dividerTheme: DividerThemeData(
       color: AppColors.dark.surface,

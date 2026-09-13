@@ -2,13 +2,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:btc_app/core/constants/api_constants.dart';
 import 'package:btc_app/feature/market/cubit/pair_chart_state.dart';
-import 'package:btc_app/feature/market/repo/market_repository.dart';
+import 'package:btc_app/feature/market/repo/btcturk_market_repository.dart';
 import 'package:btc_app/feature/market/repo/market_repository_exception.dart';
 
 typedef DateTimeProvider = DateTime Function();
 
 class PairChartCubit extends Cubit<PairChartState> {
-  final MarketRepository repository;
+  final BtcTurkMarketRepository repository;
   final String pairSymbol;
   final DateTimeProvider now;
 

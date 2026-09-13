@@ -20,7 +20,7 @@ typedef _PairListViewData = ({
 });
 
 class PairListView extends StatelessWidget {
-  final ValueChanged<String> onPairTap;
+  final void Function(String pairSymbol) onPairTap;
 
   const PairListView({super.key, required this.onPairTap});
 

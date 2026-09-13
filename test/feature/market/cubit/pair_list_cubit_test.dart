@@ -7,15 +7,16 @@ import 'package:mocktail/mocktail.dart';
 import 'package:btc_app/feature/market/cubit/pair_list_cubit.dart';
 import 'package:btc_app/feature/market/cubit/pair_list_state.dart';
 import 'package:btc_app/feature/market/models/ticker_socket_update.dart';
-import 'package:btc_app/feature/market/repo/market_repository.dart';
+import 'package:btc_app/feature/market/repo/btcturk_market_repository.dart';
 import 'package:btc_app/feature/market/repo/market_repository_exception.dart';
 
 import '../ticker_fixture.dart';
 
-class _MockMarketRepository extends Mock implements MarketRepository {}
+class _MockBtcTurkMarketRepository extends Mock
+    implements BtcTurkMarketRepository {}
 
 void main() {
-  late MarketRepository repository;
+  late BtcTurkMarketRepository repository;
   late StreamController<List<TickerSocketUpdate>> tickerController;
 
   void stubTickers() {
@@ -25,7 +26,7 @@ void main() {
   }
 
   setUp(() {
-    repository = _MockMarketRepository();
+    repository = _MockBtcTurkMarketRepository();
     tickerController = StreamController<List<TickerSocketUpdate>>.broadcast();
     when(
       () => repository.watchTickerUpdates(),
