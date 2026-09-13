@@ -7,7 +7,6 @@ import 'package:btc_app/app/components/app_page_body.dart';
 import 'package:btc_app/app/localization/locale_keys.g.dart';
 import 'package:btc_app/app/routes/router.dart';
 import 'package:btc_app/feature/market/views/pair_list_view.dart';
-import 'package:btc_app/feature/market/views/components/pair_connection_indicator.dart';
 
 class PairListPage extends StatelessWidget {
   const PairListPage({super.key});
@@ -17,7 +16,7 @@ class PairListPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(context.tr(LocaleKeys.market_pairs_title)),
-        actions: const [PairConnectionIndicator(), AppLanguageButton()],
+        actions: const [AppLanguageButton()],
       ),
       body: AppPageBody(
         child: PairListView(

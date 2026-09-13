@@ -8,7 +8,6 @@ import 'package:btc_app/feature/market/repo/btcturk_market_repository.dart';
 import 'package:btc_app/feature/market/repo/market_repository_exception.dart';
 import 'package:btc_app/feature/market/services/chart_api_service.dart';
 import 'package:btc_app/feature/market/services/market_api_service.dart';
-import 'package:btc_app/feature/market/services/market_socket_service.dart';
 
 import '../ticker_fixture.dart';
 
@@ -16,22 +15,17 @@ class _MockMarketApiService extends Mock implements MarketApiService {}
 
 class _MockChartApiService extends Mock implements ChartApiService {}
 
-class _MockMarketSocketService extends Mock implements MarketSocketService {}
-
 void main() {
   late MarketApiService apiService;
   late ChartApiService chartApiService;
-  late MarketSocketService socketService;
   late BtcTurkMarketRepository repository;
 
   setUp(() {
     apiService = _MockMarketApiService();
     chartApiService = _MockChartApiService();
-    socketService = _MockMarketSocketService();
     repository = BtcTurkMarketRepository(
       apiService: apiService,
       chartApiService: chartApiService,
-      socketService: socketService,
     );
   });
 

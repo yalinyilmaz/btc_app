@@ -5,7 +5,6 @@ import 'package:btc_app/core/constants/api_constants.dart';
 import 'package:btc_app/core/network/app_dio.dart';
 import 'package:btc_app/feature/market/cubit/favorite_pairs_cubit.dart';
 import 'package:btc_app/feature/market/repo/btcturk_market_repository.dart';
-import 'package:btc_app/feature/market/services/btcturk_market_socket_service.dart';
 import 'package:btc_app/feature/market/services/chart_api_service.dart';
 import 'package:btc_app/feature/market/services/market_api_service.dart';
 
@@ -26,12 +25,10 @@ class AppProviders extends StatelessWidget {
             final chartApiService = ChartApiService(
               AppDio.create(baseUrl: ApiConstants.graphBaseUrl),
             );
-            final socketService = BtcTurkMarketSocketService();
 
             return BtcTurkMarketRepository(
               apiService: apiService,
               chartApiService: chartApiService,
-              socketService: socketService,
             );
           },
         ),

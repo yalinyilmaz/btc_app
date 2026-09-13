@@ -16,13 +16,7 @@
       "title": "Pariteler",
       "price": "Fiyat",
       "change24h": "24 sa. değişim",
-      "empty": "Şu anda gösterilebilecek parite bulunmuyor.",
-      "realtime": {
-        "idle": "Canlı fiyatlar beklemede",
-        "connecting": "Canlı fiyatlara bağlanılıyor",
-        "connected": "Canlı fiyatlar bağlı",
-        "disconnected": "Canlı fiyat bağlantısı kesildi"
-      }
+      "empty": "Şu anda gösterilebilecek parite bulunmuyor."
     },
     "errors": {
       "connection": "İnternet bağlantını kontrol edip tekrar dene.",

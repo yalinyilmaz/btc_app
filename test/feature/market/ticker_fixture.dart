@@ -1,5 +1,4 @@
 import 'package:btc_app/feature/market/models/ticker_model.dart';
-import 'package:btc_app/feature/market/models/ticker_socket_update.dart';
 
 TickerModel tickerFixture({String pair = 'BTCUSDT', int order = 1}) {
   return TickerModel(
@@ -19,26 +18,5 @@ TickerModel tickerFixture({String pair = 'BTCUSDT', int order = 1}) {
     denominatorSymbol: 'USDT',
     numeratorSymbol: 'BTC',
     order: order,
-  );
-}
-
-TickerSocketUpdate tickerSocketUpdateFixture({
-  String pair = 'BTCUSDT',
-  double last = 200,
-}) {
-  return TickerSocketUpdate(
-    pair: pair,
-    high: 210,
-    low: 90,
-    last: last,
-    volume: 20,
-    average: 150,
-    daily: 100,
-    denominatorSymbol: 'USDT',
-    numeratorSymbol: 'BTC',
-    open: 100,
-    bid: 199,
-    ask: 201,
-    dailyPercent: 100,
   );
 }

@@ -5,23 +5,19 @@ import 'package:dio/dio.dart';
 import 'package:btc_app/core/constants/api_constants.dart';
 import 'package:btc_app/feature/market/models/kline_candle.dart';
 import 'package:btc_app/feature/market/models/ticker_model.dart';
-import 'package:btc_app/feature/market/models/ticker_socket_update.dart';
 import 'package:btc_app/feature/market/repo/market_repository_exception.dart';
-import 'package:btc_app/feature/market/services/market_api_service.dart';
 import 'package:btc_app/feature/market/services/chart_api_service.dart';
-import 'package:btc_app/feature/market/services/market_socket_service.dart';
+import 'package:btc_app/feature/market/services/market_api_service.dart';
 
 class BtcTurkMarketRepository {
   final MarketApiService apiService;
   final ChartApiService chartApiService;
-  final MarketSocketService socketService;
 
   List<TickerModel>? _tickerCache;
 
   BtcTurkMarketRepository({
     required this.apiService,
     required this.chartApiService,
-    required this.socketService,
   });
 
   Future<List<TickerModel>> getTickers({bool refresh = false}) async {
@@ -118,13 +114,5 @@ class BtcTurkMarketRepository {
       DioExceptionType.badResponse => MarketFailure.server,
       _ => MarketFailure.unexpected,
     };
-  }
-
-  Stream<List<TickerSocketUpdate>> watchTickerUpdates() {
-    return socketService.watchTickers();
-  }
-
-  Future<void> closeTickerUpdates() {
-    return socketService.close();
   }
 }

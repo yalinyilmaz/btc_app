@@ -16,14 +16,6 @@ abstract class LocaleKeys {
   static const market_pairs_price = 'market.pairs.price';
   static const market_pairs_change24h = 'market.pairs.change24h';
   static const market_pairs_empty = 'market.pairs.empty';
-  static const market_pairs_realtime_idle = 'market.pairs.realtime.idle';
-  static const market_pairs_realtime_connecting =
-      'market.pairs.realtime.connecting';
-  static const market_pairs_realtime_connected =
-      'market.pairs.realtime.connected';
-  static const market_pairs_realtime_disconnected =
-      'market.pairs.realtime.disconnected';
-  static const market_pairs_realtime = 'market.pairs.realtime';
   static const market_pairs = 'market.pairs';
   static const market_errors_connection = 'market.errors.connection';
   static const market_errors_server = 'market.errors.server';

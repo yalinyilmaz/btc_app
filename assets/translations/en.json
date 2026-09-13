@@ -16,13 +16,7 @@
       "title": "Pairs",
       "price": "Price",
       "change24h": "24h change",
-      "empty": "No pairs are available right now.",
-      "realtime": {
-        "idle": "Live prices are idle",
-        "connecting": "Connecting to live prices",
-        "connected": "Live prices connected",
-        "disconnected": "Live prices disconnected"
-      }
+      "empty": "No pairs are available right now."
     },
     "errors": {
       "connection": "Check your internet connection and try again.",

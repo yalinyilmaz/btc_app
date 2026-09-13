@@ -1,12 +1,11 @@
 # BtcTurk Market
 
-A responsive Flutter market application built for the BtcTurk Flutter Developer Code Case. It displays market pairs, keeps favorites locally, streams live ticker updates, and visualizes historical closing prices.
+A responsive Flutter market application built for the BtcTurk Flutter Developer Code Case. It displays market pairs, keeps favorites locally, and visualizes historical closing prices.
 
 ## Features
 
 - Market pairs loaded from the public BtcTurk ticker API
 - Repository-level caching for the complete ticker snapshot
-- Real-time prices over the BtcTurk WebSocket feed
 - Persistent favorites with `HydratedCubit`
 - Seven-day hourly closing-price chart with touch/drag inspection
 - Turkish and English localization
@@ -34,25 +33,25 @@ lib/
         ├── cubit/        # Pair list, chart, and favorite state
         ├── models/       # API DTOs and domain models
         ├── repo/         # BtcTurk repository and typed failures
-        ├── services/     # Retrofit and WebSocket data sources
+        ├── services/     # Retrofit data sources
         └── views/        # Pages and focused UI components
 ```
 
-Dependencies are created at the application boundary and injected through `RepositoryProvider` and route-level `BlocProvider` instances. Cubits receive the app-scoped `BtcTurkMarketRepository` through their constructors, while views remain unaware of Dio, Retrofit, and socket setup details. A future market source can be registered under its own concrete repository type and injected explicitly into the Cubit that needs it.
+Dependencies are created at the application boundary and injected through `RepositoryProvider` and route-level `BlocProvider` instances. Cubits receive the app-scoped `BtcTurkMarketRepository` through their constructors, while views remain unaware of Dio and Retrofit setup details. A future market source can be registered under its own concrete repository type and injected explicitly into the Cubit that needs it.
 
 ## Technical decisions
 
 ### Cubit and targeted rebuilds
 
-Each screen owns a focused Cubit and immutable Equatable state. `BlocSelector` is used where a widget needs only a small state slice, such as connection status, favorites, the pair list, or chart status. Transient chart-point selection remains local widget state because it has no application-level lifecycle.
+Each screen owns a focused Cubit and immutable Equatable state. `BlocSelector` is used where a widget needs only a small state slice, such as favorites, the pair list, or chart status. Transient chart-point selection remains local widget state because it has no application-level lifecycle.
 
 ### Favorites persistence
 
 Favorites are a small, non-sensitive set of symbols, so `HydratedCubit` keeps the state and persistence lifecycle together. Only a versioned, sorted symbol list is serialized. Hydrated storage is not treated as a general database; a future feature requiring queries, relationships, or larger offline datasets should move behind a dedicated local repository.
 
-### REST and WebSocket separation
+### API service separation
 
-Ticker and chart calls use separate Retrofit services because BtcTurk exposes them from different hosts. Live ticker transport is isolated behind `MarketSocketService`, allowing another transport or test implementation without changing the Cubit or UI.
+Ticker and chart calls use separate Retrofit services because BtcTurk exposes them from different hosts. The repository combines these data sources behind one feature-focused API for the Cubits.
 
 ### Ticker snapshot cache
 
@@ -76,7 +75,6 @@ Android and iOS launcher icons and native splash screens are generated from the 
 
 - Ticker: `https://api.btcturk.com/api/v2/ticker`
 - Kline history: `https://graph-api.btcturk.com/v1/klines/history`
-- WebSocket: `wss://ws-feed-pro.btcturk.com/`
 
 The ticker response envelope includes `data`, `success`, `message`, and `code`. The Kline adapter converts the parallel TradingView-style `t/o/h/l/c/v` arrays into safe, chronological `KlineCandle` domain objects.
 
@@ -133,7 +131,7 @@ flutter test
 flutter build web --release
 ```
 
-Tests cover response parsing, repository error mapping and caching, WebSocket parsing, Cubit state transitions, favorites serialization, lazy list rendering, responsive chart rendering, and chart touch interaction.
+Tests cover response parsing, repository error mapping and caching, Cubit state transitions, favorites serialization, lazy list rendering, responsive chart rendering, and chart touch interaction.
 
 ## Web limitation
 
