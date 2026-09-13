@@ -9,6 +9,8 @@ import 'package:btc_app/feature/market/models/kline_candle.dart';
 import 'package:btc_app/feature/market/repo/btcturk_market_repository.dart';
 import 'package:btc_app/feature/market/repo/market_repository_exception.dart';
 
+import '../ticker_fixture.dart';
+
 class _MockBtcTurkMarketRepository extends Mock
     implements BtcTurkMarketRepository {}
 
@@ -28,7 +30,10 @@ void main() {
     isUtc: true,
   );
   const to = 2_000_000_000;
-  final from = to - ApiConstants.defaultKlineRange.inSeconds;
+  final from = to - PairChartRange.week.duration.inSeconds;
+  final ticker = tickerFixture(
+    pair: 'BTCTRY',
+  ).copyWith(pairNormalized: 'BTC_TRY', denominatorSymbol: 'TRY');
 
   setUp(() {
     repository = _MockBtcTurkMarketRepository();
@@ -37,6 +42,9 @@ void main() {
   blocTest<PairChartCubit, PairChartState>(
     'loads the default chart range',
     setUp: () {
+      when(
+        () => repository.getTicker('BTCTRY'),
+      ).thenAnswer((_) async => ticker);
       when(
         () => repository.getKlines(
           pairSymbol: 'BTCTRY',
@@ -49,9 +57,13 @@ void main() {
     build: () =>
         PairChartCubit(repository: repository, pairSymbol: 'BTCTRY', now: now),
     act: (cubit) => cubit.load(),
-    expect: () => const [
-      PairChartState(status: PairChartStatus.loading),
-      PairChartState(status: PairChartStatus.success, candles: [candle]),
+    expect: () => [
+      const PairChartState(status: PairChartStatus.loading),
+      PairChartState(
+        status: PairChartStatus.success,
+        candles: const [candle],
+        ticker: ticker,
+      ),
     ],
     verify: (_) {
       verify(
@@ -69,6 +81,9 @@ void main() {
     'maps repository failures to chart state',
     setUp: () {
       when(
+        () => repository.getTicker('BTCTRY'),
+      ).thenAnswer((_) async => ticker);
+      when(
         () => repository.getKlines(
           pairSymbol: 'BTCTRY',
           resolution: ApiConstants.defaultKlineResolution,
@@ -85,6 +100,40 @@ void main() {
       PairChartState(
         status: PairChartStatus.failure,
         failure: MarketFailure.connection,
+      ),
+    ],
+  );
+
+  blocTest<PairChartCubit, PairChartState>(
+    'loads new chart data when the range changes',
+    setUp: () {
+      final threeMonthsFrom =
+          to - PairChartRange.threeMonths.duration.inSeconds;
+      when(
+        () => repository.getTicker('BTCTRY'),
+      ).thenAnswer((_) async => ticker);
+      when(
+        () => repository.getKlines(
+          pairSymbol: 'BTCTRY',
+          resolution: ApiConstants.defaultKlineResolution,
+          from: threeMonthsFrom,
+          to: to,
+        ),
+      ).thenAnswer((_) async => const [candle]);
+    },
+    build: () =>
+        PairChartCubit(repository: repository, pairSymbol: 'BTCTRY', now: now),
+    act: (cubit) => cubit.selectRange(PairChartRange.threeMonths),
+    expect: () => [
+      const PairChartState(
+        status: PairChartStatus.loading,
+        range: PairChartRange.threeMonths,
+      ),
+      PairChartState(
+        status: PairChartStatus.success,
+        range: PairChartRange.threeMonths,
+        candles: const [candle],
+        ticker: ticker,
       ),
     ],
   );

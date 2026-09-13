@@ -115,6 +115,25 @@ void main() {
     },
   );
 
+  test('finds a ticker in the cached API snapshot by pair symbol', () async {
+    final btc = tickerFixture(pair: 'BTCTRY', order: 1);
+    final eth = tickerFixture(pair: 'ETHTRY', order: 2);
+    when(() => apiService.getTickers()).thenAnswer(
+      (_) async => TickerResponse(
+        data: [btc, eth],
+        success: true,
+        message: null,
+        code: 0,
+      ),
+    );
+
+    await repository.getTickers(refresh: true);
+    final result = await repository.getTicker('ETHTRY');
+
+    expect(result, eth);
+    verify(() => apiService.getTickers()).called(1);
+  });
+
   test('maps parallel kline arrays to sorted candles', () async {
     when(
       () => chartApiService.getKlines(

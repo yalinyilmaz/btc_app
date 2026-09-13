@@ -37,12 +37,20 @@
     },
     "chart": {
       "title": "{} Chart",
-      "range": "Last 7 days",
       "empty": "No chart data is available for this pair.",
-      "latestPoint": "Latest value",
-      "selectedPoint": "Selected point",
-      "time": "Time",
       "close": "Close",
+      "volume": "Volume",
+      "high": "High",
+      "low": "Low",
+      "bid": "Bid",
+      "ask": "Ask",
+      "last24Hours": "(24h)",
+      "ranges": {
+        "day": "1D",
+        "week": "1W",
+        "month": "1M",
+        "threeMonths": "3M"
+      },
       "interactionHint": "Press and drag across the chart to inspect a point."
     }
   }

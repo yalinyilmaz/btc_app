@@ -6,15 +6,18 @@ import 'package:intl/intl.dart';
 
 import 'package:btc_app/core/extensions/build_context_extensions.dart';
 import 'package:btc_app/core/extensions/num_extensions.dart';
+import 'package:btc_app/feature/market/cubit/pair_chart_state.dart';
 import 'package:btc_app/feature/market/models/kline_candle.dart';
 
 class PairLineChart extends StatelessWidget {
   final List<KlineCandle> candles;
+  final PairChartRange range;
   final ValueChanged<int?> onCandleSelected;
 
   const PairLineChart({
     super.key,
     required this.candles,
+    required this.range,
     required this.onCandleSelected,
   });
 
@@ -38,7 +41,9 @@ class PairLineChart extends StatelessWidget {
     final horizontalInterval = max((maxX - minX) / 3, 1).toDouble();
     final locale = Localizations.localeOf(context);
     final compactNumber = NumberFormat.compact(locale: locale.toLanguageTag());
-    final dateFormat = DateFormat.MMMd(locale.toLanguageTag());
+    final dateFormat = range == PairChartRange.day
+        ? DateFormat.Hm(locale.toLanguageTag())
+        : DateFormat('dd-MM', locale.toLanguageTag());
 
     return DecoratedBox(
       decoration: BoxDecoration(

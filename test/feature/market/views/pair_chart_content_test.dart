@@ -6,9 +6,12 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:btc_app/app/localization/app_locale.dart';
 import 'package:btc_app/app/theme/theme.dart';
+import 'package:btc_app/feature/market/cubit/pair_chart_state.dart';
 import 'package:btc_app/feature/market/models/kline_candle.dart';
 import 'package:btc_app/feature/market/views/components/pair_chart_content.dart';
 import 'package:btc_app/feature/market/views/components/pair_line_chart.dart';
+
+import '../ticker_fixture.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +45,7 @@ void main() {
     ),
     growable: false,
   );
+  final ticker = tickerFixture();
 
   Future<void> pumpChart(WidgetTester tester, {required Size size}) async {
     tester.view.devicePixelRatio = 1;
@@ -60,7 +64,14 @@ void main() {
             locale: context.locale,
             supportedLocales: context.supportedLocales,
             localizationsDelegates: context.localizationDelegates,
-            home: Scaffold(body: PairChartContent(candles: candles)),
+            home: Scaffold(
+              body: PairChartContent(
+                candles: candles,
+                ticker: ticker,
+                selectedRange: PairChartRange.week,
+                onRangeSelected: (_) {},
+              ),
+            ),
           ),
         ),
       ),
@@ -73,14 +84,25 @@ void main() {
   ) async {
     await pumpChart(tester, size: const Size(390, 844));
 
-    expect(find.text('Latest value'), findsOneWidget);
+    expect(find.text('Latest value'), findsNothing);
+    expect(find.text('10 BTC'), findsOneWidget);
+    expect(find.text('High'), findsOneWidget);
+    expect(find.text('Low'), findsOneWidget);
+    expect(find.text('Bid'), findsOneWidget);
+    expect(find.text('Ask'), findsOneWidget);
+    expect(find.text('(24h)'), findsNWidgets(3));
+    expect(find.text('1D'), findsOneWidget);
+    expect(find.text('1W'), findsOneWidget);
+    expect(find.text('1M'), findsOneWidget);
+    expect(find.text('3M'), findsOneWidget);
+    expect(find.textContaining(RegExp(r'^\d{2}-\d{2}$')), findsWidgets);
     expect(find.byType(PairLineChart), findsOneWidget);
+    expect(find.byType(SingleChildScrollView), findsOneWidget);
     expect(tester.takeException(), isNull);
 
     tester.view.physicalSize = const Size(1280, 800);
     await tester.pumpAndSettle();
 
-    expect(find.text('Latest value'), findsOneWidget);
     expect(find.byType(PairLineChart), findsOneWidget);
     expect(tester.takeException(), isNull);
 
@@ -91,10 +113,20 @@ void main() {
     final gesture = await tester.startGesture(chartCenter);
     await tester.pump(kLongPressTimeout + const Duration(milliseconds: 100));
 
-    expect(find.text('Selected point'), findsOneWidget);
-
     await gesture.up();
     await tester.pump();
-    expect(find.text('Latest value'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+
+    tester.view.physicalSize = const Size(320, 480);
+    await tester.pumpAndSettle();
+
+    await tester.drag(
+      find.byType(SingleChildScrollView),
+      const Offset(0, -500),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.getBottomRight(find.text('Ask')).dy, lessThanOrEqualTo(480));
+    expect(tester.takeException(), isNull);
   });
 }

@@ -17,24 +17,32 @@ class PairChartCubit extends Cubit<PairChartState> {
   }) : now = now ?? DateTime.now(),
        super(const PairChartState());
 
-  Future<void> load() async {
+  Future<void> load({PairChartRange? range}) async {
     if (state.status == PairChartStatus.loading) {
       return;
     }
 
-    emit(state.copyWith(status: PairChartStatus.loading));
+    final selectedRange = range ?? state.range;
+    emit(state.copyWith(status: PairChartStatus.loading, range: selectedRange));
 
     final to = now.millisecondsSinceEpoch ~/ Duration.millisecondsPerSecond;
-    final from = to - ApiConstants.defaultKlineRange.inSeconds;
+    final from = to - selectedRange.duration.inSeconds;
 
     try {
+      final ticker = await repository.getTicker(pairSymbol);
       final candles = await repository.getKlines(
         pairSymbol: pairSymbol,
         resolution: ApiConstants.defaultKlineResolution,
         from: from,
         to: to,
       );
-      emit(state.copyWith(status: PairChartStatus.success, candles: candles));
+      emit(
+        state.copyWith(
+          status: PairChartStatus.success,
+          candles: candles,
+          ticker: ticker,
+        ),
+      );
     } on MarketRepositoryException catch (error) {
       emit(
         state.copyWith(status: PairChartStatus.failure, failure: error.failure),
@@ -47,5 +55,13 @@ class PairChartCubit extends Cubit<PairChartState> {
         ),
       );
     }
+  }
+
+  Future<void> selectRange(PairChartRange range) async {
+    if (range == state.range) {
+      return;
+    }
+
+    await load(range: range);
   }
 }

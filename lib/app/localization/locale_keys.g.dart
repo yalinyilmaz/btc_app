@@ -2,7 +2,7 @@
 
 // ignore_for_file: constant_identifier_names
 
-abstract class LocaleKeys {
+abstract class  LocaleKeys {
   static const app_title = 'app.title';
   static const app = 'app';
   static const common_language = 'common.language';
@@ -31,13 +31,21 @@ abstract class LocaleKeys {
   static const market_favorites_remove = 'market.favorites.remove';
   static const market_favorites = 'market.favorites';
   static const market_chart_title = 'market.chart.title';
-  static const market_chart_range = 'market.chart.range';
   static const market_chart_empty = 'market.chart.empty';
-  static const market_chart_latestPoint = 'market.chart.latestPoint';
-  static const market_chart_selectedPoint = 'market.chart.selectedPoint';
-  static const market_chart_time = 'market.chart.time';
   static const market_chart_close = 'market.chart.close';
+  static const market_chart_volume = 'market.chart.volume';
+  static const market_chart_high = 'market.chart.high';
+  static const market_chart_low = 'market.chart.low';
+  static const market_chart_bid = 'market.chart.bid';
+  static const market_chart_ask = 'market.chart.ask';
+  static const market_chart_last24Hours = 'market.chart.last24Hours';
+  static const market_chart_ranges_day = 'market.chart.ranges.day';
+  static const market_chart_ranges_week = 'market.chart.ranges.week';
+  static const market_chart_ranges_month = 'market.chart.ranges.month';
+  static const market_chart_ranges_threeMonths = 'market.chart.ranges.threeMonths';
+  static const market_chart_ranges = 'market.chart.ranges';
   static const market_chart_interactionHint = 'market.chart.interactionHint';
   static const market_chart = 'market.chart';
   static const market = 'market';
+
 }
