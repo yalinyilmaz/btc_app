@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:btc_app/feature/market/models/kline_response.dart';
+import 'package:btc_app/feature/market/models/ticker_response.dart';
 import 'package:dio/dio.dart';
 
 import 'package:btc_app/core/constants/api_constants.dart';
@@ -31,7 +33,7 @@ class BtcTurkMarketRepository {
 
   Future<List<TickerModel>> _fetchTickers() async {
     try {
-      final response = await apiService.getTickers();
+      final TickerResponse response = await apiService.getTickers();
       if (!response.success) {
         throw MarketRepositoryException(
           MarketFailure.server,
@@ -60,7 +62,7 @@ class BtcTurkMarketRepository {
     required int to,
   }) async {
     try {
-      final response = await chartApiService.getKlines(
+      final KlineResponse response = await chartApiService.getKlines(
         symbol: pairSymbol,
         resolution: resolution,
         from: from,

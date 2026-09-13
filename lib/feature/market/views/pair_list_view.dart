@@ -10,7 +10,6 @@ import 'package:btc_app/feature/market/models/ticker_model.dart';
 import 'package:btc_app/feature/market/repo/market_repository_exception.dart';
 import 'package:btc_app/feature/market/views/components/favorite_pairs_section.dart';
 import 'package:btc_app/feature/market/views/components/pair_collection.dart';
-import 'package:btc_app/feature/market/views/extensions/market_failure_extensions.dart';
 
 typedef _PairListViewData = ({
   PairListStatus status,
@@ -40,8 +39,7 @@ class PairListView extends StatelessWidget {
           ),
           PairListStatus.success => _buildContent(context, data.pairs),
           PairListStatus.failure => AppErrorView(
-            messageKey: (data.failure ?? MarketFailure.unexpected).messageKey,
-            message: data.errorMessage,
+            displayMessage: _displayMessage(context, data),
             onRetry: () => context.read<PairListCubit>().load(refresh: true),
           ),
         };
@@ -62,5 +60,14 @@ class PairListView extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  String _displayMessage(BuildContext context, _PairListViewData data) {
+    final backendMessage = data.errorMessage?.trim();
+    if (backendMessage != null && backendMessage.isNotEmpty) {
+      return backendMessage;
+    }
+
+    return context.tr((data.failure ?? MarketFailure.unexpected).messageKey);
   }
 }
