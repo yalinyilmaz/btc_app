@@ -14,9 +14,16 @@
   "market": {
     "pairs": {
       "title": "Pairs",
-      "price": "Price",
-      "change24h": "24h change",
-      "empty": "No pairs are available right now."
+      "empty": "No pairs are available right now.",
+      "filters": {
+        "try": "TRY",
+        "usdt": "USDT",
+        "all": "ALL"
+      },
+      "search": {
+        "hint": "Search pairs",
+        "clear": "Clear search"
+      }
     },
     "errors": {
       "connection": "Check your internet connection and try again.",

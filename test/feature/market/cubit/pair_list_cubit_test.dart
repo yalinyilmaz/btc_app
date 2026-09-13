@@ -56,4 +56,32 @@ void main() {
       ),
     ],
   );
+
+  blocTest<PairListCubit, PairListState>(
+    'changes the selected pair filter',
+    build: () => PairListCubit(repository: repository),
+    act: (cubit) => cubit.selectFilter(PairFilterType.usdt),
+    expect: () => const [PairListState(filter: PairFilterType.usdt)],
+  );
+
+  blocTest<PairListCubit, PairListState>(
+    'updates and clears the pair search',
+    build: () => PairListCubit(repository: repository),
+    act: (cubit) {
+      cubit.searchPairs('btc');
+      cubit.clearSearch();
+    },
+    expect: () => const [PairListState(searchQuery: 'btc'), PairListState()],
+  );
+
+  test('filters pairs by denominator symbol', () {
+    final usdtPair = tickerFixture();
+    final tryPair = tickerFixture().copyWith(denominatorSymbol: 'TRY');
+
+    expect(PairFilterType.tryMarket.includes(tryPair), isTrue);
+    expect(PairFilterType.tryMarket.includes(usdtPair), isFalse);
+    expect(PairFilterType.usdt.includes(usdtPair), isTrue);
+    expect(PairFilterType.all.includes(tryPair), isTrue);
+    expect(PairFilterType.all.includes(usdtPair), isTrue);
+  });
 }

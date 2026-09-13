@@ -14,9 +14,16 @@
   "market": {
     "pairs": {
       "title": "Pariteler",
-      "price": "Fiyat",
-      "change24h": "24 sa. değişim",
-      "empty": "Şu anda gösterilebilecek parite bulunmuyor."
+      "empty": "Şu anda gösterilebilecek parite bulunmuyor.",
+      "filters": {
+        "try": "TRY",
+        "usdt": "USDT",
+        "all": "TÜMÜ"
+      },
+      "search": {
+        "hint": "Parite ara",
+        "clear": "Aramayı temizle"
+      }
     },
     "errors": {
       "connection": "İnternet bağlantını kontrol edip tekrar dene.",

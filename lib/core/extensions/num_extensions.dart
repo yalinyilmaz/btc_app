@@ -3,8 +3,13 @@ import 'dart:ui';
 import 'package:intl/intl.dart';
 
 extension NumFormattingX on num {
-  String formatDecimal(Locale locale, {int maximumFractionDigits = 8}) {
+  String formatDecimal(
+    Locale locale, {
+    int minimumFractionDigits = 0,
+    int maximumFractionDigits = 8,
+  }) {
     final formatter = NumberFormat.decimalPattern(locale.toLanguageTag())
+      ..minimumFractionDigits = minimumFractionDigits
       ..maximumFractionDigits = maximumFractionDigits;
 
     return formatter.format(this);
