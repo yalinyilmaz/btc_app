@@ -1,0 +1,48 @@
+{
+  "app": {
+    "title": "BtcTurk Market"
+  },
+  "common": {
+    "language": "Dil",
+    "languages": {
+      "english": "İngilizce",
+      "turkish": "Türkçe"
+    },
+    "pageNotFound": "Sayfa bulunamadı",
+    "retry": "Tekrar dene"
+  },
+  "market": {
+    "pairs": {
+      "title": "Pariteler",
+      "price": "Fiyat",
+      "change24h": "24 sa. değişim",
+      "empty": "Şu anda gösterilebilecek parite bulunmuyor.",
+      "realtime": {
+        "idle": "Canlı fiyatlar beklemede",
+        "connecting": "Canlı fiyatlara bağlanılıyor",
+        "connected": "Canlı fiyatlar bağlı",
+        "disconnected": "Canlı fiyat bağlantısı kesildi"
+      }
+    },
+    "errors": {
+      "connection": "İnternet bağlantını kontrol edip tekrar dene.",
+      "server": "Piyasa verilerine şu anda ulaşılamıyor.",
+      "unexpected": "Bir sorun oluştu. Lütfen tekrar dene."
+    },
+    "favorites": {
+      "title": "Favoriler",
+      "add": "Favorilere ekle",
+      "remove": "Favorilerden çıkar"
+    },
+    "chart": {
+      "title": "{} Grafiği",
+      "range": "Son 7 gün",
+      "empty": "Bu parite için grafik verisi bulunmuyor.",
+      "latestPoint": "Son değer",
+      "selectedPoint": "Seçili nokta",
+      "time": "Zaman",
+      "close": "Kapanış",
+      "interactionHint": "Bir noktayı incelemek için grafiğe basılı tutup sürükle."
+    }
+  }
+}

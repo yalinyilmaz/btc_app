@@ -1,0 +1,48 @@
+{
+  "app": {
+    "title": "BtcTurk Market"
+  },
+  "common": {
+    "language": "Language",
+    "languages": {
+      "english": "English",
+      "turkish": "Turkish"
+    },
+    "pageNotFound": "Page not found",
+    "retry": "Try again"
+  },
+  "market": {
+    "pairs": {
+      "title": "Pairs",
+      "price": "Price",
+      "change24h": "24h change",
+      "empty": "No pairs are available right now.",
+      "realtime": {
+        "idle": "Live prices are idle",
+        "connecting": "Connecting to live prices",
+        "connected": "Live prices connected",
+        "disconnected": "Live prices disconnected"
+      }
+    },
+    "errors": {
+      "connection": "Check your internet connection and try again.",
+      "server": "Market data cannot be reached right now.",
+      "unexpected": "Something went wrong. Please try again."
+    },
+    "favorites": {
+      "title": "Favorites",
+      "add": "Add to favorites",
+      "remove": "Remove from favorites"
+    },
+    "chart": {
+      "title": "{} Chart",
+      "range": "Last 7 days",
+      "empty": "No chart data is available for this pair.",
+      "latestPoint": "Latest value",
+      "selectedPoint": "Selected point",
+      "time": "Time",
+      "close": "Close",
+      "interactionHint": "Press and drag across the chart to inspect a point."
+    }
+  }
+}

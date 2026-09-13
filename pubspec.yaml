@@ -1,8 +1,8 @@
 name: btc_app
-description: "A new Flutter project."
+description: "A responsive BtcTurk market application."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none"
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,7 +19,8 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.11.4
+  sdk: ">=3.12.0 <4.0.0"
+  flutter: ">=3.44.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -28,23 +29,35 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  cupertino_icons: ^1.0.8
+  dio: ^5.11.1
+  easy_localization: ^3.0.8
+  equatable: ^2.1.0
+  fl_chart: ^1.2.0
   flutter:
     sdk: flutter
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
+  flutter_bloc: ^9.1.1
+  flutter_localizations:
+    sdk: flutter
+  go_router: ^18.0.1
+  hydrated_bloc: ^11.0.0
+  intl: ^0.20.2
+  json_annotation: ^4.12.0
+  path_provider: ^2.1.6
+  retrofit: ^4.10.0
+  web_socket_channel: ^3.0.3
 
 dev_dependencies:
+  bloc_test: ^10.0.0
+  build_runner: ^2.16.1
+  flutter_launcher_icons: ^0.14.4
+  flutter_lints: ^6.0.0
+  flutter_native_splash: ^2.4.8
   flutter_test:
     sdk: flutter
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
-  flutter_lints: ^6.0.0
+  json_serializable: ^6.14.1
+  mocktail: ^1.0.5
+  retrofit_generator: ^10.2.11
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -56,6 +69,10 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/branding/
+    - assets/translations/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
@@ -87,3 +104,26 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/branding/btcturk_app_icon.png
+  adaptive_icon_background: "#09101B"
+  adaptive_icon_foreground: assets/branding/btcturk_splash_android12.png
+  adaptive_icon_foreground_inset: 0
+  remove_alpha_ios: true
+  background_color_ios: "#09101B"
+
+flutter_native_splash:
+  android: true
+  ios: true
+  web: false
+  color: "#09101B"
+  image: assets/branding/btcturk_splash_logo.png
+  android_gravity: center
+  ios_content_mode: scaleAspectFit
+  fullscreen: false
+  android_12:
+    color: "#09101B"
+    image: assets/branding/btcturk_splash_android12.png
