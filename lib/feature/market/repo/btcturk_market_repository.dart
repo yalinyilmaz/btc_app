@@ -35,6 +35,18 @@ class BtcTurkMarketRepository {
     return _fetchTickers();
   }
 
+  Future<TickerModel?> getTicker(String pairSymbol) async {
+    final tickers = await getTickers();
+
+    for (final ticker in tickers) {
+      if (ticker.pair == pairSymbol) {
+        return ticker;
+      }
+    }
+
+    return null;
+  }
+
   Future<List<TickerModel>> _fetchTickers() async {
     try {
       final TickerResponse response = await apiService.getTickers();

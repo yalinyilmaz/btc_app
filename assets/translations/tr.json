@@ -43,12 +43,20 @@
     },
     "chart": {
       "title": "{} Grafiği",
-      "range": "Son 7 gün",
       "empty": "Bu parite için grafik verisi bulunmuyor.",
-      "latestPoint": "Son değer",
-      "selectedPoint": "Seçili nokta",
-      "time": "Zaman",
       "close": "Kapanış",
+      "volume": "Hacim",
+      "high": "En yüksek",
+      "low": "En düşük",
+      "bid": "Alış",
+      "ask": "Satış",
+      "last24Hours": "(24h)",
+      "ranges": {
+        "day": "1D",
+        "week": "1W",
+        "month": "1M",
+        "threeMonths": "3M"
+      },
       "interactionHint": "Bir noktayı incelemek için grafiğe basılı tutup sürükle."
     }
   }

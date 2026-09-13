@@ -8,7 +8,6 @@ abstract final class ApiConstants {
   static const klineSuccessStatus = 'ok';
   static const klineNoDataStatus = 'no_data';
   static const defaultKlineResolution = 60;
-  static const defaultKlineRange = Duration(days: 7);
 
   static const socketSubscriptionType = 151;
   static const socketTickerAllType = 401;

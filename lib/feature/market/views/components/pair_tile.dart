@@ -40,11 +40,7 @@ class PairTile extends StatelessWidget {
                 child: _PairMarketValues(
                   price: ticker.last.formatDecimal(context.locale),
                   change: ticker.dailyPercent.formatPercent(context.locale),
-                  volume: ticker.volume.formatDecimal(
-                    context.locale,
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  ),
+                  volume: ticker.volume.floor().formatDecimal(context.locale),
                   coinSymbol: ticker.numeratorSymbol,
                   changeColor: changeColor,
                 ),

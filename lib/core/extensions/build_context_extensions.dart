@@ -17,6 +17,7 @@ extension BuildContextX on BuildContext {
   TextStyle? get bodyMedium => textTheme.bodyMedium;
   TextStyle? get bodySmall => textTheme.bodySmall;
   TextStyle? get labelLarge => textTheme.labelLarge;
+  TextStyle? get labelSmall => textTheme.labelSmall;
 
   Size get screenSize => MediaQuery.sizeOf(this);
   double get screenWidth => screenSize.width;
