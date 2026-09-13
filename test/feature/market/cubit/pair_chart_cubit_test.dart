@@ -46,11 +46,8 @@ void main() {
         ),
       ).thenAnswer((_) async => const [candle]);
     },
-    build: () => PairChartCubit(
-      repository: repository,
-      pairSymbol: 'BTCTRY',
-      now: () => now,
-    ),
+    build: () =>
+        PairChartCubit(repository: repository, pairSymbol: 'BTCTRY', now: now),
     act: (cubit) => cubit.load(),
     expect: () => const [
       PairChartState(status: PairChartStatus.loading),
@@ -80,11 +77,8 @@ void main() {
         ),
       ).thenThrow(const MarketRepositoryException(MarketFailure.connection));
     },
-    build: () => PairChartCubit(
-      repository: repository,
-      pairSymbol: 'BTCTRY',
-      now: () => now,
-    ),
+    build: () =>
+        PairChartCubit(repository: repository, pairSymbol: 'BTCTRY', now: now),
     act: (cubit) => cubit.load(),
     expect: () => const [
       PairChartState(status: PairChartStatus.loading),
