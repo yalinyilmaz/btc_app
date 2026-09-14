@@ -62,7 +62,7 @@ void main() {
       PairChartState(
         status: PairChartStatus.success,
         candles: const [candle],
-        ticker: ticker,
+        selectedTicker: ticker,
       ),
     ],
     verify: (_) {
@@ -133,8 +133,51 @@ void main() {
         status: PairChartStatus.success,
         range: PairChartRange.threeMonths,
         candles: const [candle],
-        ticker: ticker,
+        selectedTicker: ticker,
       ),
     ],
+  );
+
+  blocTest<PairChartCubit, PairChartState>(
+    'uses minute candles for the daily range',
+    setUp: () {
+      final dayFrom = to - PairChartRange.day.duration.inSeconds;
+      when(
+        () => repository.getTicker('BTCTRY'),
+      ).thenAnswer((_) async => ticker);
+      when(
+        () => repository.getKlines(
+          pairSymbol: 'BTCTRY',
+          resolution: ApiConstants.minuteKlineResolution,
+          from: dayFrom,
+          to: to,
+        ),
+      ).thenAnswer((_) async => const [candle]);
+    },
+    build: () =>
+        PairChartCubit(repository: repository, pairSymbol: 'BTCTRY', now: now),
+    act: (cubit) => cubit.selectRange(PairChartRange.day),
+    expect: () => [
+      const PairChartState(
+        status: PairChartStatus.loading,
+        range: PairChartRange.day,
+      ),
+      PairChartState(
+        status: PairChartStatus.success,
+        range: PairChartRange.day,
+        candles: const [candle],
+        selectedTicker: ticker,
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => repository.getKlines(
+          pairSymbol: 'BTCTRY',
+          resolution: ApiConstants.minuteKlineResolution,
+          from: to - PairChartRange.day.duration.inSeconds,
+          to: to,
+        ),
+      ).called(1);
+    },
   );
 }

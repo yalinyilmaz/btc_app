@@ -17,8 +17,10 @@ class KlineCandle extends Equatable {
     required this.volume,
   });
 
-  DateTime get dateTime =>
-      DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+  DateTime get dateTime => DateTime.fromMillisecondsSinceEpoch(
+    timestamp * Duration.millisecondsPerSecond,
+    isUtc: true,
+  ).toLocal();
 
   @override
   List<Object> get props => [timestamp, high, open, low, close, volume];

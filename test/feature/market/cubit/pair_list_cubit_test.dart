@@ -4,25 +4,31 @@ import 'package:mocktail/mocktail.dart';
 
 import 'package:btc_app/feature/market/cubit/pair_list_cubit.dart';
 import 'package:btc_app/feature/market/cubit/pair_list_state.dart';
+import 'package:btc_app/feature/market/models/ticker_model.dart';
 import 'package:btc_app/feature/market/repo/btcturk_market_repository.dart';
 import 'package:btc_app/feature/market/repo/market_repository_exception.dart';
 
 import '../ticker_fixture.dart';
 
-class _MockBtcTurkMarketRepository extends Mock
-    implements BtcTurkMarketRepository {}
+class _MockBtcTurkMarketRepository extends Mock implements BtcTurkMarketRepository {}
 
 void main() {
   late BtcTurkMarketRepository repository;
+  final btcTry = tickerFixture(pair: 'BTCTRY').copyWith(pairNormalized: 'BTC_TRY', denominatorSymbol: 'TRY');
+  final ethTry = tickerFixture(
+    pair: 'ETHTRY',
+    order: 2,
+  ).copyWith(pairNormalized: 'ETH_TRY', denominatorSymbol: 'TRY', numeratorSymbol: 'ETH');
+  final btcUsdt = tickerFixture(order: 3);
+  late List<TickerModel> allPairs;
 
   void stubTickers() {
-    when(
-      () => repository.getTickers(),
-    ).thenAnswer((_) async => [tickerFixture()]);
+    when(() => repository.getTickers()).thenAnswer((_) async => allPairs);
   }
 
   setUp(() {
     repository = _MockBtcTurkMarketRepository();
+    allPairs = [btcTry, ethTry, btcUsdt];
   });
 
   blocTest<PairListCubit, PairListState>(
@@ -32,7 +38,7 @@ void main() {
     act: (cubit) => cubit.load(),
     expect: () => [
       const PairListState(status: PairListStatus.loading),
-      PairListState(status: PairListStatus.success, pairs: [tickerFixture()]),
+      PairListState(status: PairListStatus.success, allPairs: allPairs, filteredPairs: [btcTry, ethTry]),
     ],
     verify: (_) {
       verify(() => repository.getTickers()).called(1);
@@ -42,36 +48,67 @@ void main() {
   blocTest<PairListCubit, PairListState>(
     'emits the typed failure returned by the repository',
     setUp: () {
-      when(
-        () => repository.getTickers(),
-      ).thenThrow(const MarketRepositoryException(MarketFailure.connection));
+      when(() => repository.getTickers()).thenThrow(const MarketRepositoryException(MarketFailure.connection));
     },
     build: () => PairListCubit(repository: repository),
     act: (cubit) => cubit.load(),
     expect: () => const [
       PairListState(status: PairListStatus.loading),
+      PairListState(status: PairListStatus.failure, failure: MarketFailure.connection),
+    ],
+  );
+
+  blocTest<PairListCubit, PairListState>(
+    'refreshes the ticker snapshot without replacing the content with loading',
+    setUp: () {
+      when(() => repository.getTickers(refresh: true)).thenAnswer((_) async => allPairs);
+    },
+    seed: () => PairListState(status: PairListStatus.success, allPairs: [btcTry], filteredPairs: [btcTry]),
+    build: () => PairListCubit(repository: repository),
+    act: (cubit) => cubit.load(refresh: true),
+    expect: () => [
+      PairListState(status: PairListStatus.success, allPairs: allPairs, filteredPairs: [btcTry, ethTry]),
+    ],
+    verify: (_) {
+      verify(() => repository.getTickers(refresh: true)).called(1);
+    },
+  );
+
+  blocTest<PairListCubit, PairListState>(
+    'emits the filtered pairs when the selected market changes',
+    setUp: stubTickers,
+    build: () => PairListCubit(repository: repository),
+    act: (cubit) async {
+      await cubit.load();
+      cubit.selectFilter(PairFilterType.usdt);
+    },
+    expect: () => [
+      const PairListState(status: PairListStatus.loading),
+      PairListState(status: PairListStatus.success, allPairs: allPairs, filteredPairs: [btcTry, ethTry]),
       PairListState(
-        status: PairListStatus.failure,
-        failure: MarketFailure.connection,
+        status: PairListStatus.success,
+        allPairs: allPairs,
+        filteredPairs: [btcUsdt],
+        filter: PairFilterType.usdt,
       ),
     ],
   );
 
   blocTest<PairListCubit, PairListState>(
-    'changes the selected pair filter',
+    'emits searched pairs and restores them when search is cleared',
+    setUp: stubTickers,
     build: () => PairListCubit(repository: repository),
-    act: (cubit) => cubit.selectFilter(PairFilterType.usdt),
-    expect: () => const [PairListState(filter: PairFilterType.usdt)],
-  );
-
-  blocTest<PairListCubit, PairListState>(
-    'updates and clears the pair search',
-    build: () => PairListCubit(repository: repository),
-    act: (cubit) {
-      cubit.searchPairs('btc');
+    act: (cubit) async {
+      await cubit.load();
+      cubit.searchPairs('eth');
       cubit.clearSearch();
     },
-    expect: () => const [PairListState(searchQuery: 'btc'), PairListState()],
+    expect: () => [
+      const PairListState(status: PairListStatus.loading),
+      PairListState(status: PairListStatus.success, allPairs: allPairs, filteredPairs: [btcTry, ethTry]),
+      PairListState(status: PairListStatus.success, allPairs: allPairs, filteredPairs: [ethTry], searchQuery: 'eth'),
+      PairListState(status: PairListStatus.success, allPairs: allPairs, filteredPairs: [btcTry, ethTry]),
+    ],
   );
 
   test('filters pairs by denominator symbol', () {

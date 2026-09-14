@@ -21,14 +21,14 @@ class PairChartState extends Equatable {
   final PairChartStatus status;
   final PairChartRange range;
   final List<KlineCandle> candles;
-  final TickerModel? ticker;
+  final TickerModel? selectedTicker;
   final MarketFailure? failure;
 
   const PairChartState({
     this.status = PairChartStatus.initial,
     this.range = PairChartRange.week,
     this.candles = const [],
-    this.ticker,
+    this.selectedTicker,
     this.failure,
   });
 
@@ -36,18 +36,18 @@ class PairChartState extends Equatable {
     PairChartStatus? status,
     PairChartRange? range,
     List<KlineCandle>? candles,
-    TickerModel? ticker,
+    TickerModel? selectedTicker,
     MarketFailure? failure,
   }) {
     return PairChartState(
       status: status ?? this.status,
       range: range ?? this.range,
       candles: candles ?? this.candles,
-      ticker: ticker ?? this.ticker,
+      selectedTicker: selectedTicker ?? this.selectedTicker,
       failure: failure,
     );
   }
 
   @override
-  List<Object?> get props => [status, range, candles, ticker, failure];
+  List<Object?> get props => [status, range, candles, selectedTicker, failure];
 }

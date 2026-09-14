@@ -23,25 +23,34 @@ class PairLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lineColor = candles.last.close >= candles.first.close
+    final Color lineColor = candles.last.close >= candles.first.close
         ? context.colors.positive
         : context.colors.negative;
-    final spots = candles
+
+    final List<FlSpot> spots = candles
         .map((candle) => FlSpot(candle.timestamp.toDouble(), candle.close))
         .toList(growable: false);
-    final minClose = candles.map((candle) => candle.close).reduce(min);
-    final maxClose = candles.map((candle) => candle.close).reduce(max);
-    final difference = maxClose - minClose;
-    final verticalPadding = difference == 0
+
+    final double minClose = candles.map((candle) => candle.close).reduce(min);
+    final double maxClose = candles.map((candle) => candle.close).reduce(max);
+    final double difference = maxClose - minClose;
+
+    final double verticalPadding = difference == 0
         ? maxClose.abs() * .01
         : difference * .08;
-    final safePadding = verticalPadding == 0 ? 1.0 : verticalPadding;
-    final minX = spots.first.x;
-    final maxX = spots.last.x;
-    final horizontalInterval = max((maxX - minX) / 3, 1).toDouble();
-    final locale = Localizations.localeOf(context);
-    final compactNumber = NumberFormat.compact(locale: locale.toLanguageTag());
-    final dateFormat = range == PairChartRange.day
+
+    final double safePadding = verticalPadding == 0 ? 1.0 : verticalPadding;
+    final double minX = spots.first.x;
+    final double maxX = spots.last.x;
+
+    final double horizontalInterval = max((maxX - minX) / 3, 1).toDouble();
+
+    final Locale locale = Localizations.localeOf(context);
+    final NumberFormat compactNumber = NumberFormat.compact(
+      locale: locale.toLanguageTag(),
+    );
+
+    final DateFormat dateFormat = range == PairChartRange.day
         ? DateFormat.Hm(locale.toLanguageTag())
         : DateFormat('dd-MM', locale.toLanguageTag());
 
@@ -98,7 +107,8 @@ class PairLineChart extends StatelessWidget {
                       dateFormat.format(
                         DateTime.fromMillisecondsSinceEpoch(
                           value.toInt() * Duration.millisecondsPerSecond,
-                        ),
+                          isUtc: true,
+                        ).toLocal(),
                       ),
                       style: context.bodySmall?.copyWith(
                         color: context.colors.textSecondary,

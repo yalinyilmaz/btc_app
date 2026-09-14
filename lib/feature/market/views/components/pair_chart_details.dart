@@ -15,9 +15,8 @@ class PairChartDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = context.locale.toLanguageTag();
-    final date = DateFormat.yMMMd(locale).add_Hm().format(candle.dateTime);
-    final ticker = this.ticker;
+    final String locale = context.locale.toLanguageTag();
+    final String date = DateFormat.yMMMd(locale).add_Hm().format(candle.dateTime);
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -33,7 +32,7 @@ class PairChartDetails extends StatelessWidget {
             Text(date, style: context.titleMedium),
             const SizedBox(height: 12),
             if (ticker != null)
-              _MarketDetails(candle: candle, ticker: ticker)
+              _MarketDetails(candle: candle, ticker: ticker!)
             else
               _DetailItem(
                 label: context.tr(LocaleKeys.market_chart_close),
@@ -61,8 +60,8 @@ class _MarketDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final priceSymbol = ticker.denominatorSymbol;
-    final volume = ticker.volume.floor().formatDecimal(context.locale);
+    final String priceSymbol = ticker.denominatorSymbol;
+    final String volume = ticker.volume.floor().formatDecimal(context.locale);
 
     String price(double value) {
       return '${value.formatDecimal(context.locale)} $priceSymbol';

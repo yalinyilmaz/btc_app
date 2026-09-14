@@ -32,7 +32,7 @@ class _PairChartContentState extends State<PairChartContent> {
   int? _selectedIndex;
 
   KlineCandle get _displayedCandle {
-    final selectedIndex = _selectedIndex;
+    final int? selectedIndex = _selectedIndex;
     if (selectedIndex != null && selectedIndex < widget.candles.length) {
       return widget.candles[selectedIndex];
     }
@@ -48,7 +48,7 @@ class _PairChartContentState extends State<PairChartContent> {
 
   @override
   Widget build(BuildContext context) {
-    final chart = Column(
+    final Widget chart = Column(
       children: [
         PairChartRangeBar(
           selectedRange: widget.selectedRange,
@@ -69,7 +69,7 @@ class _PairChartContentState extends State<PairChartContent> {
         ),
       ],
     );
-    final details = PairChartDetails(
+    final Widget details = PairChartDetails(
       candle: _displayedCandle,
       ticker: widget.ticker,
     );
