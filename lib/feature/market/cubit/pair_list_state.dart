@@ -24,7 +24,8 @@ enum PairFilterType {
 
 class PairListState extends Equatable {
   final PairListStatus status;
-  final List<TickerModel> pairs;
+  final List<TickerModel> allPairs;
+  final List<TickerModel> filteredPairs;
   final MarketFailure? failure;
   final String? errorMessage;
   final RealtimeStatus realtimeStatus;
@@ -33,7 +34,8 @@ class PairListState extends Equatable {
 
   const PairListState({
     this.status = PairListStatus.initial,
-    this.pairs = const [],
+    this.allPairs = const [],
+    this.filteredPairs = const [],
     this.failure,
     this.errorMessage,
     this.realtimeStatus = RealtimeStatus.idle,
@@ -43,7 +45,8 @@ class PairListState extends Equatable {
 
   PairListState copyWith({
     PairListStatus? status,
-    List<TickerModel>? pairs,
+    List<TickerModel>? allPairs,
+    List<TickerModel>? filteredPairs,
     MarketFailure? failure,
     String? errorMessage,
     RealtimeStatus? realtimeStatus,
@@ -52,7 +55,8 @@ class PairListState extends Equatable {
   }) {
     return PairListState(
       status: status ?? this.status,
-      pairs: pairs ?? this.pairs,
+      allPairs: allPairs ?? this.allPairs,
+      filteredPairs: filteredPairs ?? this.filteredPairs,
       failure: failure,
       errorMessage: errorMessage,
       realtimeStatus: realtimeStatus ?? this.realtimeStatus,
@@ -64,7 +68,8 @@ class PairListState extends Equatable {
   @override
   List<Object?> get props => [
     status,
-    pairs,
+    allPairs,
+    filteredPairs,
     failure,
     errorMessage,
     realtimeStatus,

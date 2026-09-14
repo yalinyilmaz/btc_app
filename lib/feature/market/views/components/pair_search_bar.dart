@@ -5,13 +5,11 @@ import 'package:btc_app/app/localization/locale_keys.g.dart';
 import 'package:btc_app/core/extensions/build_context_extensions.dart';
 
 class PairSearchBar extends StatefulWidget {
-  final String query;
   final ValueChanged<String> onChanged;
   final VoidCallback onClear;
 
   const PairSearchBar({
     super.key,
-    required this.query,
     required this.onChanged,
     required this.onClear,
   });
@@ -26,13 +24,23 @@ class _PairSearchBarState extends State<PairSearchBar> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.query);
+    _controller = TextEditingController();
   }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  void _onChanged(String query) {
+    setState(() {});
+    widget.onChanged(query);
+  }
+
+  void _clear() {
+    setState(_controller.clear);
+    widget.onClear();
   }
 
   @override
@@ -43,7 +51,7 @@ class _PairSearchBarState extends State<PairSearchBar> {
         height: 44,
         child: TextField(
           controller: _controller,
-          onChanged: widget.onChanged,
+          onChanged: _onChanged,
           cursorColor: context.colors.textPrimary,
           style: context.bodyLarge,
           textInputAction: TextInputAction.search,
@@ -65,13 +73,10 @@ class _PairSearchBarState extends State<PairSearchBar> {
               width: 44,
               height: 44,
             ),
-            suffixIcon: widget.query.isEmpty
+            suffixIcon: _controller.text.isEmpty
                 ? null
                 : IconButton(
-                    onPressed: () {
-                      _controller.clear();
-                      widget.onClear();
-                    },
+                    onPressed: _clear,
                     tooltip: context.tr(LocaleKeys.market_pairs_search_clear),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints.tightFor(

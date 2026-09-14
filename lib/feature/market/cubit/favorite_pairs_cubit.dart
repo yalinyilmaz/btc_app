@@ -15,7 +15,7 @@ class FavoritePairsCubit extends HydratedCubit<FavoritePairsState> {
       return;
     }
 
-    final symbols = {...state.symbols};
+    final Set<String> symbols = {...state.symbols};
     if (!symbols.add(normalizedSymbol)) {
       symbols.remove(normalizedSymbol);
     }
@@ -34,7 +34,7 @@ class FavoritePairsCubit extends HydratedCubit<FavoritePairsState> {
       return const FavoritePairsState();
     }
 
-    final symbols = storedSymbols
+    final Set<String> symbols = storedSymbols
         .whereType<String>()
         .map((symbol) => symbol.trim().toUpperCase())
         .where((symbol) => symbol.isNotEmpty)

@@ -6,6 +6,7 @@ import 'package:mocktail/mocktail.dart';
 
 import 'package:btc_app/feature/market/cubit/pair_list_cubit.dart';
 import 'package:btc_app/feature/market/cubit/pair_list_state.dart';
+import 'package:btc_app/feature/market/models/ticker_model.dart';
 import 'package:btc_app/feature/market/models/ticker_socket_update.dart';
 import 'package:btc_app/feature/market/repo/btcturk_market_repository.dart';
 import 'package:btc_app/feature/market/repo/market_repository_exception.dart';
@@ -18,11 +19,19 @@ class _MockBtcTurkMarketRepository extends Mock
 void main() {
   late BtcTurkMarketRepository repository;
   late StreamController<List<TickerSocketUpdate>> tickerController;
+  final btcTry = tickerFixture(
+    pair: 'BTCTRY',
+  ).copyWith(pairNormalized: 'BTC_TRY', denominatorSymbol: 'TRY');
+  final ethTry = tickerFixture(pair: 'ETHTRY', order: 2).copyWith(
+    pairNormalized: 'ETH_TRY',
+    denominatorSymbol: 'TRY',
+    numeratorSymbol: 'ETH',
+  );
+  final btcUsdt = tickerFixture(order: 3);
+  late List<TickerModel> allPairs;
 
   void stubTickers() {
-    when(
-      () => repository.getTickers(),
-    ).thenAnswer((_) async => [tickerFixture()]);
+    when(() => repository.getTickers()).thenAnswer((_) async => allPairs);
   }
 
   setUp(() {
@@ -32,6 +41,7 @@ void main() {
       () => repository.watchTickerUpdates(),
     ).thenAnswer((_) => tickerController.stream);
     when(() => repository.closeTickerUpdates()).thenAnswer((_) async {});
+    allPairs = [btcTry, ethTry, btcUsdt];
   });
 
   tearDown(() => tickerController.close());
@@ -45,7 +55,8 @@ void main() {
       const PairListState(status: PairListStatus.loading),
       PairListState(
         status: PairListStatus.success,
-        pairs: [tickerFixture()],
+        allPairs: allPairs,
+        filteredPairs: [btcTry, ethTry],
         realtimeStatus: RealtimeStatus.connecting,
       ),
     ],
@@ -73,6 +84,59 @@ void main() {
   );
 
   blocTest<PairListCubit, PairListState>(
+    'refreshes the ticker snapshot without replacing the content with loading',
+    setUp: () {
+      when(
+        () => repository.getTickers(refresh: true),
+      ).thenAnswer((_) async => allPairs);
+    },
+    seed: () => PairListState(
+      status: PairListStatus.success,
+      allPairs: [btcTry],
+      filteredPairs: [btcTry],
+    ),
+    build: () => PairListCubit(repository: repository),
+    act: (cubit) => cubit.load(refresh: true),
+    expect: () => [
+      PairListState(
+        status: PairListStatus.success,
+        allPairs: allPairs,
+        filteredPairs: [btcTry, ethTry],
+        realtimeStatus: RealtimeStatus.connecting,
+      ),
+    ],
+    verify: (_) {
+      verify(() => repository.getTickers(refresh: true)).called(1);
+    },
+  );
+
+  blocTest<PairListCubit, PairListState>(
+    'emits the filtered pairs when the selected market changes',
+    setUp: stubTickers,
+    build: () => PairListCubit(repository: repository),
+    act: (cubit) async {
+      await cubit.load();
+      cubit.selectFilter(PairFilterType.usdt);
+    },
+    expect: () => [
+      const PairListState(status: PairListStatus.loading),
+      PairListState(
+        status: PairListStatus.success,
+        allPairs: allPairs,
+        filteredPairs: [btcTry, ethTry],
+        realtimeStatus: RealtimeStatus.connecting,
+      ),
+      PairListState(
+        status: PairListStatus.success,
+        allPairs: allPairs,
+        filteredPairs: [btcUsdt],
+        realtimeStatus: RealtimeStatus.connecting,
+        filter: PairFilterType.usdt,
+      ),
+    ],
+  );
+
+  blocTest<PairListCubit, PairListState>(
     'merges socket updates into the matching ticker',
     setUp: stubTickers,
     build: () => PairListCubit(repository: repository),
@@ -85,7 +149,8 @@ void main() {
       const PairListState(status: PairListStatus.loading),
       PairListState(
         status: PairListStatus.success,
-        pairs: [tickerFixture()],
+        allPairs: allPairs,
+        filteredPairs: [btcTry, ethTry],
         realtimeStatus: RealtimeStatus.connecting,
       ),
       isA<PairListState>()
@@ -94,25 +159,47 @@ void main() {
             'realtimeStatus',
             RealtimeStatus.connected,
           )
-          .having((state) => state.pairs.single.last, 'last', 200),
+          .having(
+            (state) => state.allPairs
+                .firstWhere((pair) => pair.pair == 'BTCUSDT')
+                .last,
+            'last',
+            200,
+          ),
     ],
   );
 
   blocTest<PairListCubit, PairListState>(
-    'changes the selected pair filter',
+    'emits searched pairs and restores them when search is cleared',
+    setUp: stubTickers,
     build: () => PairListCubit(repository: repository),
-    act: (cubit) => cubit.selectFilter(PairFilterType.usdt),
-    expect: () => const [PairListState(filter: PairFilterType.usdt)],
-  );
-
-  blocTest<PairListCubit, PairListState>(
-    'updates and clears the pair search',
-    build: () => PairListCubit(repository: repository),
-    act: (cubit) {
-      cubit.searchPairs('btc');
+    act: (cubit) async {
+      await cubit.load();
+      cubit.searchPairs('eth');
       cubit.clearSearch();
     },
-    expect: () => const [PairListState(searchQuery: 'btc'), PairListState()],
+    expect: () => [
+      const PairListState(status: PairListStatus.loading),
+      PairListState(
+        status: PairListStatus.success,
+        allPairs: allPairs,
+        filteredPairs: [btcTry, ethTry],
+        realtimeStatus: RealtimeStatus.connecting,
+      ),
+      PairListState(
+        status: PairListStatus.success,
+        allPairs: allPairs,
+        filteredPairs: [ethTry],
+        realtimeStatus: RealtimeStatus.connecting,
+        searchQuery: 'eth',
+      ),
+      PairListState(
+        status: PairListStatus.success,
+        allPairs: allPairs,
+        filteredPairs: [btcTry, ethTry],
+        realtimeStatus: RealtimeStatus.connecting,
+      ),
+    ],
   );
 
   test('filters pairs by denominator symbol', () {

@@ -15,7 +15,7 @@ abstract final class AppRouteNames {
   static const pairList = '/';
   static const pairChart = '/chart/:pairSymbol';
 
-  static String pairChartLocation(String pairSymbol) {
+  static String pairChartPath(String pairSymbol) {
     return '/chart/${Uri.encodeComponent(pairSymbol)}';
   }
 }

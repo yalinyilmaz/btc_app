@@ -18,7 +18,7 @@ class AppProviders extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<BtcTurkMarketRepository>(
+        RepositoryProvider(
           create: (_) {
             final apiService = MarketApiService(
               AppDio.create(baseUrl: ApiConstants.restBaseUrl),

@@ -18,31 +18,30 @@ class PairListCubit extends Cubit<PairListState> {
 
   PairListCubit({required this.repository}) : super(const PairListState());
 
-  void searchPairs(String query) {
-    if (query == state.searchQuery) {
-      return;
-    }
-
-    emit(state.copyWith(searchQuery: query));
-  }
-
-  void clearSearch() {
-    searchPairs('');
-  }
-
   Future<void> load({bool refresh = false}) async {
     if (state.status == PairListStatus.loading) {
       return;
     }
 
-    emit(state.copyWith(status: PairListStatus.loading));
+    if (!refresh) {
+      emit(state.copyWith(status: PairListStatus.loading));
+    }
 
     try {
-      final pairs = await repository.getTickers(refresh: refresh);
+      final List<TickerModel> allPairs = await repository.getTickers(
+        refresh: refresh,
+      );
+      final List<TickerModel> pairs = _filterPairs(
+        allPairs,
+        state.filter,
+        state.searchQuery,
+      );
+
       emit(
         state.copyWith(
           status: PairListStatus.success,
-          pairs: pairs,
+          allPairs: allPairs,
+          filteredPairs: pairs,
           realtimeStatus: RealtimeStatus.connecting,
         ),
       );
@@ -65,12 +64,49 @@ class PairListCubit extends Cubit<PairListState> {
     }
   }
 
+  void searchPairs(String query) {
+    if (query == state.searchQuery) {
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        searchQuery: query,
+        filteredPairs: _filterPairs(state.allPairs, state.filter, query),
+      ),
+    );
+  }
+
+  void clearSearch() {
+    searchPairs('');
+  }
+
   void selectFilter(PairFilterType filter) {
     if (filter == state.filter) {
       return;
     }
 
-    emit(state.copyWith(filter: filter));
+    emit(
+      state.copyWith(
+        filter: filter,
+        filteredPairs: _filterPairs(state.allPairs, filter, state.searchQuery),
+      ),
+    );
+  }
+
+  List<TickerModel> _filterPairs(
+    List<TickerModel> pairs,
+    PairFilterType filter,
+    String query,
+  ) {
+    final String searchText = query.trim().replaceAll(' ', '').toUpperCase();
+
+    return pairs
+        .where((pair) {
+          return filter.includes(pair) &&
+              pair.pair.toUpperCase().contains(searchText);
+        })
+        .toList(growable: false);
   }
 
   Future<void> _startTickerUpdates() async {
@@ -101,10 +137,25 @@ class PairListCubit extends Cubit<PairListState> {
 
     final updatesByPair = {for (final update in updates) update.pair: update};
     final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final pairs = _applyUpdates(state.pairs, updatesByPair, timestamp);
+    final allPairs = _applyUpdates(state.allPairs, updatesByPair, timestamp);
+
+    if (allPairs == null) {
+      emit(state.copyWith(realtimeStatus: RealtimeStatus.connected));
+      return;
+    }
+
+    final filteredPairs = _filterPairs(
+      allPairs,
+      state.filter,
+      state.searchQuery,
+    );
 
     emit(
-      state.copyWith(pairs: pairs, realtimeStatus: RealtimeStatus.connected),
+      state.copyWith(
+        allPairs: allPairs,
+        filteredPairs: filteredPairs,
+        realtimeStatus: RealtimeStatus.connected,
+      ),
     );
   }
 

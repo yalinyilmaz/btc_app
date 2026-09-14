@@ -1,3 +1,5 @@
+import 'package:btc_app/feature/market/models/kline_candle.dart';
+import 'package:btc_app/feature/market/models/ticker_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:btc_app/core/constants/api_constants.dart';
@@ -22,17 +24,23 @@ class PairChartCubit extends Cubit<PairChartState> {
       return;
     }
 
-    final selectedRange = range ?? state.range;
+    final PairChartRange selectedRange = range ?? state.range;
+    final int resolution = selectedRange == PairChartRange.day
+        ? ApiConstants.minuteKlineResolution
+        : ApiConstants.defaultKlineResolution;
+
     emit(state.copyWith(status: PairChartStatus.loading, range: selectedRange));
 
-    final to = now.millisecondsSinceEpoch ~/ Duration.millisecondsPerSecond;
-    final from = to - selectedRange.duration.inSeconds;
+    final int to = now.millisecondsSinceEpoch ~/ Duration.millisecondsPerSecond;
+    final int from = to - selectedRange.duration.inSeconds;
 
     try {
-      final ticker = await repository.getTicker(pairSymbol);
-      final candles = await repository.getKlines(
+      final TickerModel? selectedTicker = await repository.getTicker(
+        pairSymbol,
+      );
+      final List<KlineCandle> candles = await repository.getKlines(
         pairSymbol: pairSymbol,
-        resolution: ApiConstants.defaultKlineResolution,
+        resolution: resolution,
         from: from,
         to: to,
       );
@@ -40,7 +48,7 @@ class PairChartCubit extends Cubit<PairChartState> {
         state.copyWith(
           status: PairChartStatus.success,
           candles: candles,
-          ticker: ticker,
+          selectedTicker: selectedTicker,
         ),
       );
     } on MarketRepositoryException catch (error) {

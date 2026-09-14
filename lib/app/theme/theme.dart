@@ -5,6 +5,16 @@ import 'package:btc_app/app/theme/color/colors.dart';
 import 'package:btc_app/app/theme/typography/text_style.dart';
 
 abstract final class AppTheme {
+  static final systemOverlayStyle = SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.light,
+    statusBarBrightness: Brightness.dark,
+    systemNavigationBarColor: AppColors.dark.background,
+    systemNavigationBarDividerColor: AppColors.dark.background,
+    systemNavigationBarIconBrightness: Brightness.light,
+    systemNavigationBarContrastEnforced: false,
+  );
+
   static final dark = ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
@@ -25,7 +35,7 @@ abstract final class AppTheme {
       scrolledUnderElevation: 0,
       backgroundColor: AppColors.dark.background,
       foregroundColor: AppColors.dark.textPrimary,
-      systemOverlayStyle: SystemUiOverlayStyle.dark,
+      systemOverlayStyle: systemOverlayStyle,
     ),
     dividerTheme: DividerThemeData(
       color: AppColors.dark.surface,
