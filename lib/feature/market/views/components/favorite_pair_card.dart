@@ -46,14 +46,14 @@ class FavoritePairCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: context.titleMedium,
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     Text(
                       ticker.last.formatDecimal(context.locale),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: context.titleMedium,
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     Text(
                       ticker.dailyPercent.formatPercent(context.locale),
                       maxLines: 1,

@@ -13,14 +13,28 @@ class PairChartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String pairName = _formatPairName(pairSymbol);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          context.tr(LocaleKeys.market_chart_title, args: [pairSymbol]),
+          context.tr(LocaleKeys.market_chart_title, args: [pairName]),
         ),
         actions: const [AppLanguageButton()],
       ),
       body: const AppPageBody(child: PairChartView()),
     );
+  }
+
+  String _formatPairName(String symbol) {
+    if (symbol.endsWith('USDT')) {
+      return '${symbol.substring(0, symbol.length - 4)}/USDT';
+    }
+
+    if (symbol.endsWith('TRY')) {
+      return '${symbol.substring(0, symbol.length - 3)}/TRY';
+    }
+
+    return symbol;
   }
 }
