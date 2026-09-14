@@ -98,14 +98,16 @@ class BtcTurkMarketRepository {
 
       final candles = List.generate(
         candleCount,
-        (index) => KlineCandle(
-          timestamp: response.timestamps[index],
-          high: response.highs[index],
-          open: response.opens[index],
-          low: response.lows[index],
-          close: response.closes[index],
-          volume: response.volumes[index],
-        ),
+        (index) {
+          return KlineCandle(
+            timestamp: response.timestamps[index],
+            high: response.highs[index],
+            open: response.opens[index],
+            low: response.lows[index],
+            close: response.closes[index],
+            volume: response.volumes[index],
+          );
+        },
         growable: false,
       )..sort((first, second) => first.timestamp.compareTo(second.timestamp));
 
@@ -120,13 +122,20 @@ class BtcTurkMarketRepository {
   }
 
   MarketFailure _mapDioFailure(DioExceptionType type) {
-    return switch (type) {
-      DioExceptionType.connectionTimeout ||
-      DioExceptionType.sendTimeout ||
-      DioExceptionType.receiveTimeout ||
-      DioExceptionType.connectionError => MarketFailure.connection,
-      DioExceptionType.badResponse => MarketFailure.server,
-      _ => MarketFailure.unexpected,
-    };
+    final bool isConnectionFailure =
+        type == DioExceptionType.connectionTimeout ||
+        type == DioExceptionType.sendTimeout ||
+        type == DioExceptionType.receiveTimeout ||
+        type == DioExceptionType.connectionError;
+
+    if (isConnectionFailure) {
+      return MarketFailure.connection;
+    }
+
+    if (type == DioExceptionType.badResponse) {
+      return MarketFailure.server;
+    }
+
+    return MarketFailure.unexpected;
   }
 }

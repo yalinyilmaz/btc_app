@@ -76,10 +76,12 @@ class PairLineChart extends StatelessWidget {
             gridData: FlGridData(
               drawVerticalLine: false,
               horizontalInterval: verticalInterval,
-              getDrawingHorizontalLine: (_) => FlLine(
-                color: context.colors.textSecondary.withValues(alpha: .16),
-                strokeWidth: 1,
-              ),
+              getDrawingHorizontalLine: (_) {
+                return FlLine(
+                  color: context.colors.textSecondary.withValues(alpha: .16),
+                  strokeWidth: 1,
+                );
+              },
             ),
             titlesData: FlTitlesData(
               topTitles: const AxisTitles(
@@ -94,16 +96,18 @@ class PairLineChart extends StatelessWidget {
                   interval: verticalInterval,
                   reservedSize: 54,
                   maxIncluded: true,
-                  getTitlesWidget: (value, meta) => SideTitleWidget(
-                    meta: meta,
-                    child: Text(
-                      compactNumber.format(value),
-                      maxLines: 1,
-                      style: context.bodySmall?.copyWith(
-                        color: context.colors.textSecondary,
+                  getTitlesWidget: (value, meta) {
+                    return SideTitleWidget(
+                      meta: meta,
+                      child: Text(
+                        compactNumber.format(value),
+                        maxLines: 1,
+                        style: context.bodySmall?.copyWith(
+                          color: context.colors.textSecondary,
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ),
               bottomTitles: AxisTitles(
@@ -113,20 +117,23 @@ class PairLineChart extends StatelessWidget {
                   reservedSize: 30,
                   minIncluded: true,
                   maxIncluded: true,
-                  getTitlesWidget: (value, meta) => SideTitleWidget(
-                    meta: meta,
-                    child: Text(
-                      dateFormat.format(
+                  getTitlesWidget: (value, meta) {
+                    final DateTime dateTime =
                         DateTime.fromMillisecondsSinceEpoch(
                           value.toInt() * Duration.millisecondsPerSecond,
                           isUtc: true,
-                        ).toLocal(),
+                        ).toLocal();
+
+                    return SideTitleWidget(
+                      meta: meta,
+                      child: Text(
+                        dateFormat.format(dateTime),
+                        style: context.bodySmall?.copyWith(
+                          color: context.colors.textSecondary,
+                        ),
                       ),
-                      style: context.bodySmall?.copyWith(
-                        color: context.colors.textSecondary,
-                      ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -146,14 +153,19 @@ class PairLineChart extends StatelessWidget {
                 fitInsideHorizontally: true,
                 fitInsideVertically: true,
                 getTooltipColor: (_) => context.colors.background,
-                getTooltipItems: (touchedSpots) => touchedSpots
-                    .map(
-                      (spot) => LineTooltipItem(
-                        spot.y.formatDecimal(locale, maximumFractionDigits: 4),
-                        context.labelLarge ?? const TextStyle(),
-                      ),
-                    )
-                    .toList(growable: false),
+                getTooltipItems: (touchedSpots) {
+                  return touchedSpots
+                      .map((spot) {
+                        return LineTooltipItem(
+                          spot.y.formatDecimal(
+                            locale,
+                            maximumFractionDigits: 4,
+                          ),
+                          context.labelLarge ?? const TextStyle(),
+                        );
+                      })
+                      .toList(growable: false);
+                },
               ),
             ),
             lineBarsData: [

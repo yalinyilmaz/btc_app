@@ -15,7 +15,11 @@ class PairListView extends StatelessWidget {
   final List<TickerModel> allPairs;
   final void Function(String pairSymbol) onPairTap;
 
-  const PairListView({super.key, required this.allPairs, required this.onPairTap});
+  const PairListView({
+    super.key,
+    required this.allPairs,
+    required this.onPairTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,22 +33,30 @@ class PairListView extends StatelessWidget {
         BlocSelector<PairListCubit, PairListState, PairFilterType>(
           selector: (state) => state.filter,
           builder: (context, filter) {
-            return PairFilterBar(selectedFilter: filter, onSelected: context.read<PairListCubit>().selectFilter);
+            return PairFilterBar(
+              selectedFilter: filter,
+              onSelected: context.read<PairListCubit>().selectFilter,
+            );
           },
         ),
         Expanded(
           child: RefreshIndicator.adaptive(
-            onRefresh: () => context.read<PairListCubit>().load(refresh: true),
-            child: BlocSelector<PairListCubit, PairListState, List<TickerModel>>(
-              selector: (state) => state.filteredPairs,
-              builder: (context, pairs) {
-                if (pairs.isEmpty) {
-                  return Center(child: Text(context.tr(LocaleKeys.market_pairs_empty)));
-                }
+            onRefresh: () {
+              return context.read<PairListCubit>().load(refresh: true);
+            },
+            child:
+                BlocSelector<PairListCubit, PairListState, List<TickerModel>>(
+                  selector: (state) => state.filteredPairs,
+                  builder: (context, pairs) {
+                    if (pairs.isEmpty) {
+                      return Center(
+                        child: Text(context.tr(LocaleKeys.market_pairs_empty)),
+                      );
+                    }
 
-                return PairCollection(pairs: pairs, onPairTap: onPairTap);
-              },
-            ),
+                    return PairCollection(pairs: pairs, onPairTap: onPairTap);
+                  },
+                ),
           ),
         ),
       ],

@@ -99,9 +99,15 @@ class _FilterButton extends StatelessWidget {
     );
   }
 
-  String get _labelKey => switch (filter) {
-    PairFilterType.tryMarket => LocaleKeys.market_pairs_filters_try,
-    PairFilterType.usdt => LocaleKeys.market_pairs_filters_usdt,
-    PairFilterType.all => LocaleKeys.market_pairs_filters_all,
-  };
+  String get _labelKey {
+    if (filter == PairFilterType.tryMarket) {
+      return LocaleKeys.market_pairs_filters_try;
+    }
+
+    if (filter == PairFilterType.usdt) {
+      return LocaleKeys.market_pairs_filters_usdt;
+    }
+
+    return LocaleKeys.market_pairs_filters_all;
+  }
 }

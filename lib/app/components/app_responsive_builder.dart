@@ -17,10 +17,14 @@ class AppResponsiveBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return switch (context.layoutSize) {
-      AppLayoutSize.mobile => mobile(context),
-      AppLayoutSize.tablet => (tablet ?? mobile)(context),
-      AppLayoutSize.desktop => (desktop ?? tablet ?? mobile)(context),
-    };
+    if (context.layoutSize == AppLayoutSize.mobile) {
+      return mobile(context);
+    }
+
+    if (context.layoutSize == AppLayoutSize.tablet) {
+      return (tablet ?? mobile)(context);
+    }
+
+    return (desktop ?? tablet ?? mobile)(context);
   }
 }

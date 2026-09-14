@@ -26,29 +26,37 @@ class PairChartView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocSelector<PairChartCubit, PairChartState, _PairChartViewData>(
-      selector: (state) => (
-        status: state.status,
-        range: state.range,
-        candles: state.candles,
-        ticker: state.selectedTicker,
-        failure: state.failure,
-      ),
+      selector: (state) {
+        return (
+          status: state.status,
+          range: state.range,
+          candles: state.candles,
+          ticker: state.selectedTicker,
+          failure: state.failure,
+        );
+      },
       builder: (context, data) {
         final bool isLoading = data.status == PairChartStatus.loading;
 
-        if (data.status == PairChartStatus.initial || (isLoading && data.candles.isEmpty)) {
+        if (data.status == PairChartStatus.initial ||
+            (isLoading && data.candles.isEmpty)) {
           return const Center(child: CircularProgressIndicator.adaptive());
         }
 
         if (data.status == PairChartStatus.failure) {
           return AppErrorView(
-            displayMessage: context.tr((data.failure ?? MarketFailure.unexpected).messageKey),
+            displayMessage: context.tr(
+              (data.failure ?? MarketFailure.unexpected).messageKey,
+            ),
             onRetry: context.read<PairChartCubit>().load,
           );
         }
 
         if (data.candles.isEmpty) {
-          return _EmptyChart(selectedRange: data.range, onRangeSelected: context.read<PairChartCubit>().selectRange);
+          return _EmptyChart(
+            selectedRange: data.range,
+            onRangeSelected: context.read<PairChartCubit>().selectRange,
+          );
         }
 
         return PairChartContent(
@@ -68,7 +76,10 @@ class _EmptyChart extends StatelessWidget {
   final PairChartRange selectedRange;
   final ValueChanged<PairChartRange> onRangeSelected;
 
-  const _EmptyChart({required this.selectedRange, required this.onRangeSelected});
+  const _EmptyChart({
+    required this.selectedRange,
+    required this.onRangeSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -76,8 +87,15 @@ class _EmptyChart extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: Column(
         children: [
-          PairChartRangeBar(selectedRange: selectedRange, onSelected: onRangeSelected),
-          Expanded(child: Center(child: Text(context.tr(LocaleKeys.market_chart_empty)))),
+          PairChartRangeBar(
+            selectedRange: selectedRange,
+            onSelected: onRangeSelected,
+          ),
+          Expanded(
+            child: Center(
+              child: Text(context.tr(LocaleKeys.market_chart_empty)),
+            ),
+          ),
         ],
       ),
     );

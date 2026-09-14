@@ -15,7 +15,8 @@ enum PairFilterType {
   const PairFilterType(this.denominatorSymbol);
 
   bool includes(TickerModel pair) {
-    return denominatorSymbol == null || pair.denominatorSymbol == denominatorSymbol;
+    return denominatorSymbol == null ||
+        pair.denominatorSymbol == denominatorSymbol;
   }
 }
 
@@ -59,5 +60,13 @@ class PairListState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, allPairs, filteredPairs, failure, errorMessage, filter, searchQuery];
+  List<Object?> get props => [
+    status,
+    allPairs,
+    filteredPairs,
+    failure,
+    errorMessage,
+    filter,
+    searchQuery,
+  ];
 }

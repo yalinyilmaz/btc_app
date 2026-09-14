@@ -20,8 +20,14 @@ class PairListCubit extends Cubit<PairListState> {
     }
 
     try {
-      final List<TickerModel> allPairs = await repository.getTickers(refresh: refresh);
-      final List<TickerModel> pairs = _filterPairs(allPairs, state.filter, state.searchQuery);
+      final List<TickerModel> allPairs = await repository.getTickers(
+        refresh: refresh,
+      );
+      final List<TickerModel> pairs = _filterPairs(
+        allPairs,
+        state.filter,
+        state.searchQuery,
+      );
 
       emit(
         state.copyWith(

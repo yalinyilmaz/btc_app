@@ -93,10 +93,19 @@ class _RangeButton extends StatelessWidget {
     );
   }
 
-  String get _labelKey => switch (range) {
-    PairChartRange.day => LocaleKeys.market_chart_ranges_day,
-    PairChartRange.week => LocaleKeys.market_chart_ranges_week,
-    PairChartRange.month => LocaleKeys.market_chart_ranges_month,
-    PairChartRange.threeMonths => LocaleKeys.market_chart_ranges_threeMonths,
-  };
+  String get _labelKey {
+    if (range == PairChartRange.day) {
+      return LocaleKeys.market_chart_ranges_day;
+    }
+
+    if (range == PairChartRange.week) {
+      return LocaleKeys.market_chart_ranges_week;
+    }
+
+    if (range == PairChartRange.month) {
+      return LocaleKeys.market_chart_ranges_month;
+    }
+
+    return LocaleKeys.market_chart_ranges_threeMonths;
+  }
 }

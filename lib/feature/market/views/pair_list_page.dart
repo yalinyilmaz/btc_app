@@ -33,32 +33,41 @@ class PairListPage extends StatelessWidget {
       ),
       body: AppPageBody(
         child: BlocSelector<PairListCubit, PairListState, _PairListPageData>(
-          selector: (state) => (
-            status: state.status,
-            allPairs: state.allPairs,
-            failure: state.failure,
-            errorMessage: state.errorMessage,
-          ),
+          selector: (state) {
+            return (
+              status: state.status,
+              allPairs: state.allPairs,
+              failure: state.failure,
+              errorMessage: state.errorMessage,
+            );
+          },
           builder: (context, data) {
-            return switch (data.status) {
-              PairListStatus.initial || PairListStatus.loading => const Center(
-                child: CircularProgressIndicator.adaptive(),
-              ),
-              PairListStatus.success when data.allPairs.isEmpty => Center(
-                child: Text(context.tr(LocaleKeys.market_pairs_empty)),
-              ),
-              PairListStatus.success => PairListView(
-                allPairs: data.allPairs,
-                onPairTap: (pairSymbol) {
-                  context.push(AppRouteNames.pairChartPath(pairSymbol));
-                },
-              ),
-              PairListStatus.failure => AppErrorView(
+            if (data.status == PairListStatus.initial ||
+                data.status == PairListStatus.loading) {
+              return const Center(child: CircularProgressIndicator.adaptive());
+            }
+
+            if (data.status == PairListStatus.failure) {
+              return AppErrorView(
                 displayMessage: _displayMessage(context, data),
-                onRetry: () =>
-                    context.read<PairListCubit>().load(refresh: true),
-              ),
-            };
+                onRetry: () {
+                  context.read<PairListCubit>().load(refresh: true);
+                },
+              );
+            }
+
+            if (data.allPairs.isEmpty) {
+              return Center(
+                child: Text(context.tr(LocaleKeys.market_pairs_empty)),
+              );
+            }
+
+            return PairListView(
+              allPairs: data.allPairs,
+              onPairTap: (pairSymbol) {
+                context.push(AppRouteNames.pairChartPath(pairSymbol));
+              },
+            );
           },
         ),
       ),

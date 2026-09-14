@@ -16,7 +16,9 @@ class PairChartDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String locale = context.locale.toLanguageTag();
-    final String date = DateFormat.yMMMd(locale).add_Hm().format(candle.dateTime);
+    final String date = DateFormat.yMMMd(
+      locale,
+    ).add_Hm().format(candle.dateTime);
 
     return DecoratedBox(
       decoration: BoxDecoration(

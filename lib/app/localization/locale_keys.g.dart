@@ -2,7 +2,7 @@
 
 // ignore_for_file: constant_identifier_names
 
-abstract class  LocaleKeys {
+abstract class LocaleKeys {
   static const app_title = 'app.title';
   static const app = 'app';
   static const common_language = 'common.language';
@@ -42,10 +42,10 @@ abstract class  LocaleKeys {
   static const market_chart_ranges_day = 'market.chart.ranges.day';
   static const market_chart_ranges_week = 'market.chart.ranges.week';
   static const market_chart_ranges_month = 'market.chart.ranges.month';
-  static const market_chart_ranges_threeMonths = 'market.chart.ranges.threeMonths';
+  static const market_chart_ranges_threeMonths =
+      'market.chart.ranges.threeMonths';
   static const market_chart_ranges = 'market.chart.ranges';
   static const market_chart_interactionHint = 'market.chart.interactionHint';
   static const market_chart = 'market.chart';
   static const market = 'market';
-
 }
