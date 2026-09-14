@@ -14,12 +14,7 @@ class PairLineChart extends StatelessWidget {
   final PairChartRange range;
   final ValueChanged<int?> onCandleSelected;
 
-  const PairLineChart({
-    super.key,
-    required this.candles,
-    required this.range,
-    required this.onCandleSelected,
-  });
+  const PairLineChart({super.key, required this.candles, required this.range, required this.onCandleSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -35,61 +30,58 @@ class PairLineChart extends StatelessWidget {
     final double maxClose = candles.map((candle) => candle.close).reduce(max);
     final double difference = maxClose - minClose;
 
-    final double verticalPadding = difference == 0
-        ? maxClose.abs() * .01
-        : difference * .08;
+    final double verticalPadding = difference == 0 ? maxClose.abs() * .01 : difference * .08;
 
     final double safePadding = verticalPadding == 0 ? 1.0 : verticalPadding;
     final double minX = spots.first.x;
     final double maxX = spots.last.x;
+    final double minY = minClose - safePadding;
+    final double maxY = maxClose + safePadding;
 
     final double horizontalInterval = max((maxX - minX) / 3, 1).toDouble();
+    final double verticalInterval = (maxY - minY) / 6;
 
     final Locale locale = Localizations.localeOf(context);
-    final NumberFormat compactNumber = NumberFormat.compact(
-      locale: locale.toLanguageTag(),
-    );
+    final NumberFormat compactNumber = NumberFormat.compact(locale: locale.toLanguageTag());
 
     final DateFormat dateFormat = range == PairChartRange.day
         ? DateFormat.Hm(locale.toLanguageTag())
         : DateFormat('dd-MM', locale.toLanguageTag());
 
     return DecoratedBox(
-      decoration: BoxDecoration(
-        color: context.colors.surface,
-        borderRadius: BorderRadius.circular(12),
-      ),
+      decoration: BoxDecoration(color: context.colors.surface, borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(12, 24, 20, 12),
         child: LineChart(
           LineChartData(
             minX: minX,
             maxX: maxX,
-            minY: minClose - safePadding,
-            maxY: maxClose + safePadding,
+            minY: minY,
+            maxY: maxY,
+            baselineX: minX,
+            baselineY: minY,
             borderData: FlBorderData(show: false),
             gridData: FlGridData(
               drawVerticalLine: false,
-              getDrawingHorizontalLine: (_) => FlLine(
-                color: context.colors.textSecondary.withValues(alpha: .16),
-                strokeWidth: 1,
-              ),
+              horizontalInterval: verticalInterval,
+              getDrawingHorizontalLine: (_) =>
+                  FlLine(color: context.colors.textSecondary.withValues(alpha: .16), strokeWidth: 1),
             ),
             titlesData: FlTitlesData(
-              topTitles: const AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
-              ),
-              rightTitles: const AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
-              ),
+              topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
               leftTitles: AxisTitles(
                 sideTitles: SideTitles(
                   showTitles: true,
+                  interval: verticalInterval,
                   reservedSize: 54,
-                  getTitlesWidget: (value, _) => Text(
-                    compactNumber.format(value),
-                    style: context.bodySmall?.copyWith(
-                      color: context.colors.textSecondary,
+                  maxIncluded: true,
+                  getTitlesWidget: (value, meta) => SideTitleWidget(
+                    meta: meta,
+                    child: Text(
+                      compactNumber.format(value),
+                      maxLines: 1,
+                      style: context.bodySmall?.copyWith(color: context.colors.textSecondary),
                     ),
                   ),
                 ),
@@ -101,8 +93,8 @@ class PairLineChart extends StatelessWidget {
                   reservedSize: 30,
                   minIncluded: true,
                   maxIncluded: true,
-                  getTitlesWidget: (value, _) => Padding(
-                    padding: const EdgeInsets.only(top: 8),
+                  getTitlesWidget: (value, meta) => SideTitleWidget(
+                    meta: meta,
                     child: Text(
                       dateFormat.format(
                         DateTime.fromMillisecondsSinceEpoch(
@@ -110,9 +102,7 @@ class PairLineChart extends StatelessWidget {
                           isUtc: true,
                         ).toLocal(),
                       ),
-                      style: context.bodySmall?.copyWith(
-                        color: context.colors.textSecondary,
-                      ),
+                      style: context.bodySmall?.copyWith(color: context.colors.textSecondary),
                     ),
                   ),
                 ),
@@ -122,9 +112,7 @@ class PairLineChart extends StatelessWidget {
               handleBuiltInTouches: true,
               touchCallback: (event, response) {
                 final touchedSpots = response?.lineBarSpots;
-                if (!event.isInterestedForInteractions ||
-                    touchedSpots == null ||
-                    touchedSpots.isEmpty) {
+                if (!event.isInterestedForInteractions || touchedSpots == null || touchedSpots.isEmpty) {
                   onCandleSelected(null);
                   return;
                 }
@@ -158,10 +146,7 @@ class PairLineChart extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [
-                      lineColor.withValues(alpha: .24),
-                      lineColor.withValues(alpha: 0),
-                    ],
+                    colors: [lineColor.withValues(alpha: .24), lineColor.withValues(alpha: 0)],
                   ),
                 ),
               ),
