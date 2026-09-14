@@ -135,16 +135,20 @@ class PairListCubit extends Cubit<PairListState> {
       return;
     }
 
-    final updatesByPair = {for (final update in updates) update.pair: update};
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final allPairs = _applyUpdates(state.allPairs, updatesByPair, timestamp);
-
-    if (allPairs == null) {
-      emit(state.copyWith(realtimeStatus: RealtimeStatus.connected));
-      return;
+    final Map<String, TickerSocketUpdate> updatesByPair = {};
+    for (final update in updates) {
+      updatesByPair[update.pair] = update;
     }
 
-    final filteredPairs = _filterPairs(
+    final int timestamp = DateTime.now().millisecondsSinceEpoch;
+
+    final List<TickerModel> allPairs = _mergeTickerUpdates(
+      state.allPairs,
+      updatesByPair,
+      timestamp,
+    );
+
+    final List<TickerModel> filteredPairs = _filterPairs(
       allPairs,
       state.filter,
       state.searchQuery,
@@ -159,25 +163,24 @@ class PairListCubit extends Cubit<PairListState> {
     );
   }
 
-  List<TickerModel>? _applyUpdates(
+  List<TickerModel> _mergeTickerUpdates(
     List<TickerModel> tickers,
     Map<String, TickerSocketUpdate> updatesByPair,
     int timestamp,
   ) {
-    var hasChanges = false;
-    final updatedTickers = tickers
+    final List<TickerModel> updatedTickers = tickers
         .map((ticker) {
-          final update = updatesByPair[ticker.pair];
+          final TickerSocketUpdate? update = updatesByPair[ticker.pair];
+
           if (update == null) {
             return ticker;
           }
 
-          hasChanges = true;
           return update.applyTo(ticker, timestamp: timestamp);
         })
         .toList(growable: false);
 
-    return hasChanges ? List.unmodifiable(updatedTickers) : null;
+    return List.unmodifiable(updatedTickers);
   }
 
   void _handleTickerDisconnect() {

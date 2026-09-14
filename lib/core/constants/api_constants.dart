@@ -12,7 +12,6 @@ abstract final class ApiConstants {
 
   static const socketSubscriptionType = 151;
   static const socketTickerAllType = 401;
-  static const socketTickerPairType = 402;
   static const socketTickerChannel = 'ticker';
   static const socketAllEvent = 'all';
 

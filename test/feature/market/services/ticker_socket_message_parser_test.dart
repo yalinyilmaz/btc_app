@@ -38,14 +38,6 @@ void main() {
     expect(result.single.dailyPercent, -1.02);
   });
 
-  test('parses a single-pair ticker message', () {
-    final documentedTickerJson = {...tickerJson, 'La': '47500'}..remove('LA');
-    final result = TickerSocketMessageParser.parse([402, documentedTickerJson]);
-
-    expect(result, hasLength(1));
-    expect(result.single.denominatorSymbol, 'TRY');
-  });
-
   test('ignores unsupported and malformed messages', () {
     expect(TickerSocketMessageParser.parse([100, {}]), isEmpty);
     expect(TickerSocketMessageParser.parse('invalid'), isEmpty);

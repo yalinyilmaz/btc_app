@@ -33,9 +33,7 @@ class PairListView extends StatelessWidget {
           },
         ),
         Expanded(
-          child: RefreshIndicator.adaptive(
-            onRefresh: () => context.read<PairListCubit>().load(refresh: true),
-            child: BlocSelector<PairListCubit, PairListState, List<TickerModel>>(
+          child: BlocSelector<PairListCubit, PairListState, List<TickerModel>>(
               selector: (state) => state.filteredPairs,
               builder: (context, pairs) {
                 if (pairs.isEmpty) {
@@ -45,7 +43,6 @@ class PairListView extends StatelessWidget {
                 return PairCollection(pairs: pairs, onPairTap: onPairTap);
               },
             ),
-          ),
         ),
       ],
     );

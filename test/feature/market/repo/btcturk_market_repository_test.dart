@@ -2,13 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'package:btc_app/feature/market/models/ticker_response.dart';
 import 'package:btc_app/feature/market/models/kline_response.dart';
+import 'package:btc_app/feature/market/models/ticker_response.dart';
 import 'package:btc_app/feature/market/repo/btcturk_market_repository.dart';
 import 'package:btc_app/feature/market/repo/market_repository_exception.dart';
+import 'package:btc_app/feature/market/services/btcturk_market_socket_service.dart';
 import 'package:btc_app/feature/market/services/chart_api_service.dart';
 import 'package:btc_app/feature/market/services/market_api_service.dart';
-import 'package:btc_app/feature/market/services/market_socket_service.dart';
 
 import '../ticker_fixture.dart';
 
@@ -16,18 +16,19 @@ class _MockMarketApiService extends Mock implements MarketApiService {}
 
 class _MockChartApiService extends Mock implements ChartApiService {}
 
-class _MockMarketSocketService extends Mock implements MarketSocketService {}
+class _MockBtcTurkMarketSocketService extends Mock
+    implements BtcTurkMarketSocketService {}
 
 void main() {
   late MarketApiService apiService;
   late ChartApiService chartApiService;
-  late MarketSocketService socketService;
+  late BtcTurkMarketSocketService socketService;
   late BtcTurkMarketRepository repository;
 
   setUp(() {
     apiService = _MockMarketApiService();
     chartApiService = _MockChartApiService();
-    socketService = _MockMarketSocketService();
+    socketService = _MockBtcTurkMarketSocketService();
     repository = BtcTurkMarketRepository(
       apiService: apiService,
       chartApiService: chartApiService,

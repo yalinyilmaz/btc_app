@@ -74,7 +74,7 @@ Ticker response modeli yalnızca `data` alanını değil, BtcTurk’ün response
 
 Kline endpoint’i mum verilerini `t/o/h/l/c/v` şeklinde paralel listeler halinde döndürüyor. Listelerin uzunlukları beklenmedik biçimde farklı gelirse index hatası oluşmaması için en kısa liste uzunluğu esas alınıyor. Oluşturulan mumlar zaman sırasına konup değiştirilemeyen bir liste olarak UI’a veriliyor.
 
-İlk market verisi REST endpoint’inden alındıktan sonra canlı fiyatlar WebSocket üzerinden güncelleniyor. Socket bağlantısı `MarketSocketService` arkasında tutulduğu için taşıma katmanı Cubit ve UI’dan ayrılıyor. Bağlantı kesildiğinde yeniden bağlanma deneniyor ve güncel bağlantı durumu arayüzde gösteriliyor.
+İlk market verisi REST endpoint’inden alındıktan sonra canlı fiyatlar WebSocket üzerinden güncelleniyor. Bağlantı kurulumu ve mesaj akışı `BtcTurkMarketSocketService` içinde tutulduğu için Cubit ve UI socket detaylarını bilmiyor. Bağlantı kesildiğinde yeniden bağlanma deneniyor ve güncel bağlantı durumu arayüzde gösteriliyor.
 
 ## Ticker cache’i ve liste performansı
 
@@ -198,3 +198,6 @@ Web tarafı production ortamına taşınacaksa REST çağrılarının izin veril
 - Analyze, test ve release build adımlarını çalıştıran CI akışı
 - Backend ekibiyle birlikte tasarlanacak OAuth 2.0 authentication akışı
 - Access ve refresh token yönetimi, token yenileme akışı ve güvenli cihaz depolaması
+- WebSocket yeniden bağlandığında REST endpoint’inden yeni bir ticker snapshot’ı alarak bağlantı kopukken kaçırılan mesajların oluşturabileceği stale data durumunu önleme
+- Yoğun WebSocket güncellemelerini örneğin iki saniyelik aralıklarla throttle veya buffer ederek gereksiz state emission ve rebuild sayısını azaltma
+- Her fiyat güncellemesinde bütün listeyi veya tile’ı yeniden oluşturmak yerine, yalnızca değişen fiyat alanlarını hedefli selector’larla rebuild etme

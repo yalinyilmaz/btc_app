@@ -9,14 +9,14 @@ import 'package:btc_app/feature/market/models/kline_candle.dart';
 import 'package:btc_app/feature/market/models/ticker_model.dart';
 import 'package:btc_app/feature/market/models/ticker_socket_update.dart';
 import 'package:btc_app/feature/market/repo/market_repository_exception.dart';
-import 'package:btc_app/feature/market/services/market_api_service.dart';
+import 'package:btc_app/feature/market/services/btcturk_market_socket_service.dart';
 import 'package:btc_app/feature/market/services/chart_api_service.dart';
-import 'package:btc_app/feature/market/services/market_socket_service.dart';
+import 'package:btc_app/feature/market/services/market_api_service.dart';
 
 class BtcTurkMarketRepository {
   final MarketApiService apiService;
   final ChartApiService chartApiService;
-  final MarketSocketService socketService;
+  final BtcTurkMarketSocketService socketService;
 
   List<TickerModel>? _tickerCache;
 
