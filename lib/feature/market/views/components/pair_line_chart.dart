@@ -42,8 +42,11 @@ class PairLineChart extends StatelessWidget {
     final double safePadding = verticalPadding == 0 ? 1.0 : verticalPadding;
     final double minX = spots.first.x;
     final double maxX = spots.last.x;
+    final double minY = minClose - safePadding;
+    final double maxY = maxClose + safePadding;
 
     final double horizontalInterval = max((maxX - minX) / 3, 1).toDouble();
+    final double verticalInterval = (maxY - minY) / 6;
 
     final Locale locale = Localizations.localeOf(context);
     final NumberFormat compactNumber = NumberFormat.compact(
@@ -65,11 +68,14 @@ class PairLineChart extends StatelessWidget {
           LineChartData(
             minX: minX,
             maxX: maxX,
-            minY: minClose - safePadding,
-            maxY: maxClose + safePadding,
+            minY: minY,
+            maxY: maxY,
+            baselineX: minX,
+            baselineY: minY,
             borderData: FlBorderData(show: false),
             gridData: FlGridData(
               drawVerticalLine: false,
+              horizontalInterval: verticalInterval,
               getDrawingHorizontalLine: (_) => FlLine(
                 color: context.colors.textSecondary.withValues(alpha: .16),
                 strokeWidth: 1,
@@ -85,11 +91,17 @@ class PairLineChart extends StatelessWidget {
               leftTitles: AxisTitles(
                 sideTitles: SideTitles(
                   showTitles: true,
+                  interval: verticalInterval,
                   reservedSize: 54,
-                  getTitlesWidget: (value, _) => Text(
-                    compactNumber.format(value),
-                    style: context.bodySmall?.copyWith(
-                      color: context.colors.textSecondary,
+                  maxIncluded: true,
+                  getTitlesWidget: (value, meta) => SideTitleWidget(
+                    meta: meta,
+                    child: Text(
+                      compactNumber.format(value),
+                      maxLines: 1,
+                      style: context.bodySmall?.copyWith(
+                        color: context.colors.textSecondary,
+                      ),
                     ),
                   ),
                 ),
@@ -101,8 +113,8 @@ class PairLineChart extends StatelessWidget {
                   reservedSize: 30,
                   minIncluded: true,
                   maxIncluded: true,
-                  getTitlesWidget: (value, _) => Padding(
-                    padding: const EdgeInsets.only(top: 8),
+                  getTitlesWidget: (value, meta) => SideTitleWidget(
+                    meta: meta,
                     child: Text(
                       dateFormat.format(
                         DateTime.fromMillisecondsSinceEpoch(
