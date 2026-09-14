@@ -175,10 +175,7 @@ dart run flutter_native_splash:create
 
 ```bash
 flutter analyze
-flutter test
 ```
-
-Testler; response ve WebSocket mesajlarının parse edilmesi, repository cache ve hata eşleme davranışı, Cubit state geçişleri, canlı ticker güncellemeleri, favorilerin serialize edilmesi, filtreleme, arama, responsive liste oluşturma, grafik aralığı istekleri, chart etkileşimi ve küçük ekranda scroll davranışını kapsıyor.
 
 Web release almak için ayrıca:
 
@@ -195,7 +192,7 @@ Web tarafı production ortamına taşınacaksa REST çağrılarının izin veril
 ## Daha sonra eklenebilecekler
 
 - Firebase Crashlytics veya Sentry ile merkezi hata takibi ve loglama
-- Analyze, test ve release build adımlarını çalıştıran CI akışı
+- Analyze ve release build adımlarını çalıştıran CI akışı
 - Backend ekibiyle birlikte tasarlanacak OAuth 2.0 authentication akışı
 - Access ve refresh token yönetimi, token yenileme akışı ve güvenli cihaz depolaması
 - WebSocket yeniden bağlandığında REST endpoint’inden yeni bir ticker snapshot’ı alarak bağlantı kopukken kaçırılan mesajların oluşturabileceği stale data durumunu önleme
