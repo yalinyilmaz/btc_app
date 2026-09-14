@@ -11,9 +11,10 @@ abstract final class AppLocale {
   static const translationsPath = 'assets/translations';
 
   static String languageNameKey(Locale locale) {
-    return switch (locale.languageCode) {
-      'tr' => LocaleKeys.common_languages_turkish,
-      _ => LocaleKeys.common_languages_english,
-    };
+    if (locale.languageCode == turkish.languageCode) {
+      return LocaleKeys.common_languages_turkish;
+    }
+
+    return LocaleKeys.common_languages_english;
   }
 }

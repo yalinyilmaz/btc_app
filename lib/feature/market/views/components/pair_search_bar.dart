@@ -43,6 +43,10 @@ class _PairSearchBarState extends State<PairSearchBar> {
     widget.onClear();
   }
 
+  void _dismissKeyboard() {
+    FocusManager.instance.primaryFocus?.unfocus();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -52,6 +56,12 @@ class _PairSearchBarState extends State<PairSearchBar> {
         child: TextField(
           controller: _controller,
           onChanged: _onChanged,
+          onTapOutside: (_) {
+            _dismissKeyboard();
+          },
+          onSubmitted: (_) {
+            _dismissKeyboard();
+          },
           cursorColor: context.colors.textPrimary,
           style: context.bodyLarge,
           textInputAction: TextInputAction.search,
@@ -101,8 +111,10 @@ class _PairSearchBarState extends State<PairSearchBar> {
     );
   }
 
-  OutlineInputBorder get _border => OutlineInputBorder(
-    borderRadius: BorderRadius.circular(12),
-    borderSide: BorderSide.none,
-  );
+  OutlineInputBorder get _border {
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: BorderSide.none,
+    );
+  }
 }

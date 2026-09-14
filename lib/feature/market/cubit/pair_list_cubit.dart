@@ -122,7 +122,9 @@ class PairListCubit extends Cubit<PairListState> {
     try {
       _tickerSubscription = repository.watchTickerUpdates().listen(
         _applyTickerUpdates,
-        onError: (_, _) => _handleTickerDisconnect(),
+        onError: (_, _) {
+          _handleTickerDisconnect();
+        },
         onDone: _handleTickerDisconnect,
       );
     } catch (_) {
@@ -190,10 +192,9 @@ class PairListCubit extends Cubit<PairListState> {
 
     emit(state.copyWith(realtimeStatus: RealtimeStatus.disconnected));
     _reconnectTimer?.cancel();
-    _reconnectTimer = Timer(
-      ApiConstants.socketReconnectDelay,
-      () => unawaited(_startTickerUpdates()),
-    );
+    _reconnectTimer = Timer(ApiConstants.socketReconnectDelay, () {
+      unawaited(_startTickerUpdates());
+    });
   }
 
   @override

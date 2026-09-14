@@ -14,7 +14,12 @@ class PairLineChart extends StatelessWidget {
   final PairChartRange range;
   final ValueChanged<int?> onCandleSelected;
 
-  const PairLineChart({super.key, required this.candles, required this.range, required this.onCandleSelected});
+  const PairLineChart({
+    super.key,
+    required this.candles,
+    required this.range,
+    required this.onCandleSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +35,9 @@ class PairLineChart extends StatelessWidget {
     final double maxClose = candles.map((candle) => candle.close).reduce(max);
     final double difference = maxClose - minClose;
 
-    final double verticalPadding = difference == 0 ? maxClose.abs() * .01 : difference * .08;
+    final double verticalPadding = difference == 0
+        ? maxClose.abs() * .01
+        : difference * .08;
 
     final double safePadding = verticalPadding == 0 ? 1.0 : verticalPadding;
     final double minX = spots.first.x;
@@ -42,14 +49,19 @@ class PairLineChart extends StatelessWidget {
     final double verticalInterval = (maxY - minY) / 6;
 
     final Locale locale = Localizations.localeOf(context);
-    final NumberFormat compactNumber = NumberFormat.compact(locale: locale.toLanguageTag());
+    final NumberFormat compactNumber = NumberFormat.compact(
+      locale: locale.toLanguageTag(),
+    );
 
     final DateFormat dateFormat = range == PairChartRange.day
         ? DateFormat.Hm(locale.toLanguageTag())
         : DateFormat('dd-MM', locale.toLanguageTag());
 
     return DecoratedBox(
-      decoration: BoxDecoration(color: context.colors.surface, borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(12, 24, 20, 12),
         child: LineChart(
@@ -64,26 +76,38 @@ class PairLineChart extends StatelessWidget {
             gridData: FlGridData(
               drawVerticalLine: false,
               horizontalInterval: verticalInterval,
-              getDrawingHorizontalLine: (_) =>
-                  FlLine(color: context.colors.textSecondary.withValues(alpha: .16), strokeWidth: 1),
+              getDrawingHorizontalLine: (_) {
+                return FlLine(
+                  color: context.colors.textSecondary.withValues(alpha: .16),
+                  strokeWidth: 1,
+                );
+              },
             ),
             titlesData: FlTitlesData(
-              topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              topTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+              rightTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
               leftTitles: AxisTitles(
                 sideTitles: SideTitles(
                   showTitles: true,
                   interval: verticalInterval,
                   reservedSize: 54,
                   maxIncluded: true,
-                  getTitlesWidget: (value, meta) => SideTitleWidget(
-                    meta: meta,
-                    child: Text(
-                      compactNumber.format(value),
-                      maxLines: 1,
-                      style: context.bodySmall?.copyWith(color: context.colors.textSecondary),
-                    ),
-                  ),
+                  getTitlesWidget: (value, meta) {
+                    return SideTitleWidget(
+                      meta: meta,
+                      child: Text(
+                        compactNumber.format(value),
+                        maxLines: 1,
+                        style: context.bodySmall?.copyWith(
+                          color: context.colors.textSecondary,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
               bottomTitles: AxisTitles(
@@ -93,18 +117,23 @@ class PairLineChart extends StatelessWidget {
                   reservedSize: 30,
                   minIncluded: true,
                   maxIncluded: true,
-                  getTitlesWidget: (value, meta) => SideTitleWidget(
-                    meta: meta,
-                    child: Text(
-                      dateFormat.format(
+                  getTitlesWidget: (value, meta) {
+                    final DateTime dateTime =
                         DateTime.fromMillisecondsSinceEpoch(
                           value.toInt() * Duration.millisecondsPerSecond,
                           isUtc: true,
-                        ).toLocal(),
+                        ).toLocal();
+
+                    return SideTitleWidget(
+                      meta: meta,
+                      child: Text(
+                        dateFormat.format(dateTime),
+                        style: context.bodySmall?.copyWith(
+                          color: context.colors.textSecondary,
+                        ),
                       ),
-                      style: context.bodySmall?.copyWith(color: context.colors.textSecondary),
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -112,7 +141,9 @@ class PairLineChart extends StatelessWidget {
               handleBuiltInTouches: true,
               touchCallback: (event, response) {
                 final touchedSpots = response?.lineBarSpots;
-                if (!event.isInterestedForInteractions || touchedSpots == null || touchedSpots.isEmpty) {
+                if (!event.isInterestedForInteractions ||
+                    touchedSpots == null ||
+                    touchedSpots.isEmpty) {
                   onCandleSelected(null);
                   return;
                 }
@@ -122,14 +153,19 @@ class PairLineChart extends StatelessWidget {
                 fitInsideHorizontally: true,
                 fitInsideVertically: true,
                 getTooltipColor: (_) => context.colors.background,
-                getTooltipItems: (touchedSpots) => touchedSpots
-                    .map(
-                      (spot) => LineTooltipItem(
-                        spot.y.formatDecimal(locale, maximumFractionDigits: 4),
-                        context.labelLarge ?? const TextStyle(),
-                      ),
-                    )
-                    .toList(growable: false),
+                getTooltipItems: (touchedSpots) {
+                  return touchedSpots
+                      .map((spot) {
+                        return LineTooltipItem(
+                          spot.y.formatDecimal(
+                            locale,
+                            maximumFractionDigits: 4,
+                          ),
+                          context.labelLarge ?? const TextStyle(),
+                        );
+                      })
+                      .toList(growable: false);
+                },
               ),
             ),
             lineBarsData: [
@@ -146,7 +182,10 @@ class PairLineChart extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [lineColor.withValues(alpha: .24), lineColor.withValues(alpha: 0)],
+                    colors: [
+                      lineColor.withValues(alpha: .24),
+                      lineColor.withValues(alpha: 0),
+                    ],
                   ),
                 ),
               ),

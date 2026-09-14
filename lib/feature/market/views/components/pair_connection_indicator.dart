@@ -16,12 +16,7 @@ class PairConnectionIndicator extends StatelessWidget {
       selector: (state) => state.realtimeStatus,
       builder: (context, status) {
         final label = context.tr(_labelKey(status));
-        final color = switch (status) {
-          RealtimeStatus.connected => context.colors.positive,
-          RealtimeStatus.disconnected => context.colors.negative,
-          RealtimeStatus.idle ||
-          RealtimeStatus.connecting => context.colors.textSecondary,
-        };
+        final color = _indicatorColor(context, status);
 
         return Tooltip(
           message: label,
@@ -42,13 +37,31 @@ class PairConnectionIndicator extends StatelessWidget {
     );
   }
 
+  Color _indicatorColor(BuildContext context, RealtimeStatus status) {
+    if (status == RealtimeStatus.connected) {
+      return context.colors.positive;
+    }
+
+    if (status == RealtimeStatus.disconnected) {
+      return context.colors.negative;
+    }
+
+    return context.colors.textSecondary;
+  }
+
   String _labelKey(RealtimeStatus status) {
-    return switch (status) {
-      RealtimeStatus.idle => LocaleKeys.market_pairs_realtime_idle,
-      RealtimeStatus.connecting => LocaleKeys.market_pairs_realtime_connecting,
-      RealtimeStatus.connected => LocaleKeys.market_pairs_realtime_connected,
-      RealtimeStatus.disconnected =>
-        LocaleKeys.market_pairs_realtime_disconnected,
-    };
+    if (status == RealtimeStatus.idle) {
+      return LocaleKeys.market_pairs_realtime_idle;
+    }
+
+    if (status == RealtimeStatus.connecting) {
+      return LocaleKeys.market_pairs_realtime_connecting;
+    }
+
+    if (status == RealtimeStatus.connected) {
+      return LocaleKeys.market_pairs_realtime_connected;
+    }
+
+    return LocaleKeys.market_pairs_realtime_disconnected;
   }
 }

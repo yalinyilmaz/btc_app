@@ -23,7 +23,8 @@ class BtcTurkMarketSocketService {
       channel.sink.add(jsonEncode(_subscriptionMessage));
 
       await for (final message in channel.stream) {
-        final List<TickerSocketUpdate> updates = TickerSocketMessageParser.parse(message);
+        final List<TickerSocketUpdate> updates =
+            TickerSocketMessageParser.parse(message);
         if (updates.isNotEmpty) {
           yield updates;
         }

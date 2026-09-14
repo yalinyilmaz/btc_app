@@ -43,7 +43,10 @@ class _PairChartContentState extends State<PairChartContent> {
     if (_selectedIndex == index) {
       return;
     }
-    setState(() => _selectedIndex = index);
+
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   @override
@@ -77,28 +80,34 @@ class _PairChartContentState extends State<PairChartContent> {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: AppResponsiveBuilder(
-        mobile: (_) => Column(
-          children: [
-            SizedBox(height: 420, child: chart),
-            const SizedBox(height: 16),
-            details,
-          ],
-        ),
-        tablet: (_) => Column(
-          children: [
-            SizedBox(height: 500, child: chart),
-            const SizedBox(height: 20),
-            details,
-          ],
-        ),
-        desktop: (_) => Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(child: SizedBox(height: 580, child: chart)),
-            const SizedBox(width: 24),
-            SizedBox(width: 360, child: details),
-          ],
-        ),
+        mobile: (_) {
+          return Column(
+            children: [
+              SizedBox(height: 420, child: chart),
+              const SizedBox(height: 16),
+              details,
+            ],
+          );
+        },
+        tablet: (_) {
+          return Column(
+            children: [
+              SizedBox(height: 500, child: chart),
+              const SizedBox(height: 20),
+              details,
+            ],
+          );
+        },
+        desktop: (_) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: SizedBox(height: 580, child: chart)),
+              const SizedBox(width: 24),
+              SizedBox(width: 360, child: details),
+            ],
+          );
+        },
       ),
     );
   }

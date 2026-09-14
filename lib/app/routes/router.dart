@@ -27,9 +27,11 @@ final appRouter = GoRouter(
       path: AppRouteNames.pairList,
       builder: (context, state) {
         return BlocProvider(
-          create: (_) =>
-              PairListCubit(repository: context.read<BtcTurkMarketRepository>())
-                ..load(),
+          create: (_) {
+            return PairListCubit(
+              repository: context.read<BtcTurkMarketRepository>(),
+            )..load();
+          },
           child: const PairListPage(),
         );
       },
@@ -39,10 +41,12 @@ final appRouter = GoRouter(
       builder: (context, state) {
         final pairSymbol = state.pathParameters['pairSymbol']!;
         return BlocProvider(
-          create: (_) => PairChartCubit(
-            repository: context.read<BtcTurkMarketRepository>(),
-            pairSymbol: pairSymbol,
-          )..load(),
+          create: (_) {
+            return PairChartCubit(
+              repository: context.read<BtcTurkMarketRepository>(),
+              pairSymbol: pairSymbol,
+            )..load();
+          },
           child: PairChartPage(pairSymbol: pairSymbol),
         );
       },
